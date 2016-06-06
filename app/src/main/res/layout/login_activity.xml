@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:layout_width="177dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/name_login"
+        android:layout_gravity="center_horizontal"
+        android:layout_alignStart="@+id/passText"
+        android:layout_above="@+id/passText"
+        android:layout_alignEnd="@+id/passText"
+        android:hint="Login"/>
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:ems="10"
+        android:id="@+id/passText"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="171dp"
+        android:hint="Hasło"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/login_button"
+        android:id="@+id/login_button"
+        android:layout_marginTop="78dp"
+        android:layout_below="@+id/name_login"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Zapamiętaj mnie"
+        android:id="@+id/textRemember"
+        android:textSize="16dp"
+        android:layout_marginTop="7dp"
+
+        android:layout_alignTop="@+id/checLog"
+        android:layout_alignBottom="@+id/checLog"
+        android:layout_alignEnd="@+id/login_button" />
+
+
+    <CheckBox
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/checLog"
+        android:layout_marginTop="40dp"
+        android:layout_below="@+id/name_login"
+        android:layout_alignStart="@+id/passText"
+        android:layout_toStartOf="@+id/login_button" />
+
+</RelativeLayout>

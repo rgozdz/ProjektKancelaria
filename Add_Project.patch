@@ -1,0 +1,2949 @@
+Index: app/src/main/java/com/example/rafal/projektkancelaria/EditDocumentDialog.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/rafal/projektkancelaria/EditDocumentDialog.java	(revision )
++++ app/src/main/java/com/example/rafal/projektkancelaria/EditDocumentDialog.java	(revision )
+@@ -0,0 +1,104 @@
++package com.example.rafal.projektkancelaria;
++
++import android.app.AlertDialog;
++import android.app.Dialog;
++import android.app.DialogFragment;
++import android.content.DialogInterface;
++import android.os.Bundle;
++import android.view.View;
++import android.widget.ArrayAdapter;
++import android.widget.EditText;
++import android.widget.Spinner;
++import android.widget.Toast;
++
++import java.text.SimpleDateFormat;
++import java.util.ArrayList;
++import java.util.Calendar;
++import java.util.HashMap;
++import java.util.List;
++
++
++public class EditDocumentDialog extends DialogFragment {
++
++
++    private Calendar cal;
++    private EditText nameField;
++    private Spinner typeField;
++    private EditText describtionField;
++    private String documentName;
++    private String typeDoc;
++    private String describtionDoc;
++
++
++
++
++    @Override
++    public Dialog onCreateDialog(Bundle savedInstanceState) {
++        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
++        builder.setTitle("Edycja wniosku");
++        builder.setMessage("Wprowadź zmiany");
++
++
++        View view = getActivity().getLayoutInflater().inflate(R.layout.add_layout, null);
++        nameField= (EditText)view.findViewById(R.id.dok_name);
++        typeField =(Spinner)view.findViewById(R.id.type_spinner);
++        describtionField =(EditText)view.findViewById(R.id.dok_describtion);
++
++        List<String> categories = new ArrayList<String>();
++        categories.add("Wniosek o podwyżkę");
++        categories.add("Wniosek o urop");
++        categories.add("Decyzja");
++        categories.add("Plan urlopowy");
++
++        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, categories);
++        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
++        typeField.setAdapter(dataAdapter);
++
++
++        builder.setView(view)
++                .setPositiveButton(R.string.save_document, new DialogInterface.OnClickListener() {
++                    @Override
++                    public void onClick(DialogInterface dialog, int which) {
++
++                        SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy hh:mm:ss");
++                        cal = Calendar.getInstance();
++                        String dateNow = dateFormat.format(cal.getTime());
++
++                        String name = nameField.getText().toString();
++                        String type = typeField.getSelectedItem().toString();
++                        String desctibtion =describtionField.getText().toString();
++
++                        if(!name.isEmpty())
++                        {
++                            HashMap<String, String> temp = new HashMap<String, String>();
++                            temp.put(ListConstants.DATE_COLUMN, dateNow);
++                            temp.put(ListConstants.NAME_COLUMN, name);
++                            temp.put(ListConstants.STATUS_COLUMN, "Nowy");
++                            temp.put(ListConstants.TYPE_COLUMN, type);
++                            temp.put(ListConstants.DESCRIBTION_COLUMN,desctibtion);
++                            fragment_document.list.add(temp);
++
++                            Toast.makeText(getActivity(), "Dodano dokument " + name, Toast.LENGTH_SHORT).show();
++                            //dialog.dismiss();
++                        }else{
++                            nameField.setHint("Nie podano tytułu");
++                        }
++                    }
++                }).setNegativeButton(R.string.cancel_adding, new DialogInterface.OnClickListener() {
++            @Override
++            public void onClick(DialogInterface dialog, int which) {
++                dialog.dismiss();
++            }
++        });
++
++        Dialog dialog=builder.create();
++
++        return dialog;
++
++
++    }
++
++
++
++
++}
+Index: .idea/misc.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/misc.xml	(revision )
++++ .idea/misc.xml	(revision )
+@@ -0,0 +1,62 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="EntryPointsManager">
++    <entry_points version="2.0" />
++  </component>
++  <component name="NullableNotNullManager">
++    <option name="myDefaultNullable" value="android.support.annotation.Nullable" />
++    <option name="myDefaultNotNull" value="android.support.annotation.NonNull" />
++    <option name="myNullables">
++      <value>
++        <list size="4">
++          <item index="0" class="java.lang.String" itemvalue="org.jetbrains.annotations.Nullable" />
++          <item index="1" class="java.lang.String" itemvalue="javax.annotation.Nullable" />
++          <item index="2" class="java.lang.String" itemvalue="edu.umd.cs.findbugs.annotations.Nullable" />
++          <item index="3" class="java.lang.String" itemvalue="android.support.annotation.Nullable" />
++        </list>
++      </value>
++    </option>
++    <option name="myNotNulls">
++      <value>
++        <list size="4">
++          <item index="0" class="java.lang.String" itemvalue="org.jetbrains.annotations.NotNull" />
++          <item index="1" class="java.lang.String" itemvalue="javax.annotation.Nonnull" />
++          <item index="2" class="java.lang.String" itemvalue="edu.umd.cs.findbugs.annotations.NonNull" />
++          <item index="3" class="java.lang.String" itemvalue="android.support.annotation.NonNull" />
++        </list>
++      </value>
++    </option>
++  </component>
++  <component name="ProjectLevelVcsManager" settingsEditedManually="false">
++    <OptionsSetting value="true" id="Add" />
++    <OptionsSetting value="true" id="Remove" />
++    <OptionsSetting value="true" id="Checkout" />
++    <OptionsSetting value="true" id="Update" />
++    <OptionsSetting value="true" id="Status" />
++    <OptionsSetting value="true" id="Edit" />
++    <ConfirmationsSetting value="0" id="Add" />
++    <ConfirmationsSetting value="0" id="Remove" />
++  </component>
++  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_7" default="true" assert-keyword="true" jdk-15="true" project-jdk-name="1.7" project-jdk-type="JavaSDK">
++    <output url="file://$PROJECT_DIR$/build/classes" />
++  </component>
++  <component name="ProjectType">
++    <option name="id" value="Android" />
++  </component>
++  <component name="masterDetails">
++    <states>
++      <state key="ProjectJDKs.UI">
++        <settings>
++          <last-edited>1.7</last-edited>
++          <splitter-proportions>
++            <option name="proportions">
++              <list>
++                <option value="0.2" />
++              </list>
++            </option>
++          </splitter-proportions>
++        </settings>
++      </state>
++    </states>
++  </component>
++</project>
+\ No newline at end of file
+Index: app/src/main/res/layout/content_main.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/layout/content_main.xml	(revision )
++++ app/src/main/res/layout/content_main.xml	(revision )
+@@ -0,0 +1,13 @@
++<?xml version="1.0" encoding="utf-8"?>
++<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
++    xmlns:tools="http://schemas.android.com/tools"
++    xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent"
++    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
++    android:paddingRight="@dimen/activity_horizontal_margin"
++    android:paddingTop="@dimen/activity_vertical_margin"
++    android:paddingBottom="@dimen/activity_vertical_margin"
++    app:layout_behavior="@string/appbar_scrolling_view_behavior" tools:showIn="@layout/app_bar_main"
++    tools:context=".MainActivity">
++
++
++</RelativeLayout>
+Index: app/proguard-rules.pro
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/proguard-rules.pro	(revision )
++++ app/proguard-rules.pro	(revision )
+@@ -0,0 +1,17 @@
++# Add project specific ProGuard rules here.
++# By default, the flags in this file are appended to flags specified
++# in C:\Users\rafal\AppData\Local\Android\sdk/tools/proguard/proguard-android.txt
++# You can edit the include path and order by changing the proguardFiles
++# directive in build.gradle.
++#
++# For more details, see
++#   http://developer.android.com/guide/developing/tools/proguard.html
++
++# Add any project specific keep options here:
++
++# If your project uses WebView with JS, uncomment the following
++# and specify the fully qualified class name to the JavaScript interface
++# class:
++#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
++#   public *;
++#}
+Index: app/src/androidTest/java/com/example/rafal/projektkancelaria/ApplicationTest.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/androidTest/java/com/example/rafal/projektkancelaria/ApplicationTest.java	(revision )
++++ app/src/androidTest/java/com/example/rafal/projektkancelaria/ApplicationTest.java	(revision )
+@@ -0,0 +1,13 @@
++package com.example.rafal.projektkancelaria;
++
++import android.app.Application;
++import android.test.ApplicationTestCase;
++
++/**
++ * <a href="http://d.android.com/tools/testing/testing_android.html">Testing Fundamentals</a>
++ */
++public class ApplicationTest extends ApplicationTestCase<Application> {
++    public ApplicationTest() {
++        super(Application.class);
++    }
++}
+\ No newline at end of file
+Index: .idea/copyright/profiles_settings.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/copyright/profiles_settings.xml	(revision )
++++ .idea/copyright/profiles_settings.xml	(revision )
+@@ -0,0 +1,3 @@
++<component name="CopyrightManager">
++  <settings default="" />
++</component>
+\ No newline at end of file
+Index: app/src/main/res/layout/list_row.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/layout/list_row.xml	(revision )
++++ app/src/main/res/layout/list_row.xml	(revision )
+@@ -0,0 +1,40 @@
++<?xml version="1.0" encoding="utf-8"?>
++    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
++        android:layout_width="match_parent"
++        android:layout_height="match_parent"
++        
++        android:background="?android:attr/activatedBackgroundIndicator"
++        >
++
++        <TextView
++            android:id="@+id/date"
++            android:layout_height="47dp"
++            android:layout_width="0dp"
++            android:layout_weight="0.43"
++            android:layout_marginTop="8dp"/>
++
++        <TextView
++            android:id="@+id/name"
++            android:layout_height="47dp"
++            android:layout_width="0dp"
++            android:layout_weight="0.69"
++            android:textStyle="bold"
++            android:layout_marginTop="8dp"/>
++
++        <TextView
++            android:id="@+id/type"
++            android:layout_height="47dp"
++            android:layout_width="0dp"
++            android:layout_weight="0.32"
++            android:layout_marginTop="8dp"/>
++
++        <TextView
++            android:id="@+id/status"
++            android:layout_height="47dp"
++            android:layout_width="0dp"
++            android:layout_weight="0.56"
++            android:layout_marginTop="8dp"/>
++
++
++
++</LinearLayout>
+\ No newline at end of file
+Index: app/src/main/res/layout/nav_header_main.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/layout/nav_header_main.xml	(revision )
++++ app/src/main/res/layout/nav_header_main.xml	(revision )
+@@ -0,0 +1,23 @@
++<?xml version="1.0" encoding="utf-8"?>
++<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
++    android:layout_width="match_parent" android:layout_height="@dimen/nav_header_height"
++    android:background="@drawable/side_nav_bar"
++    android:paddingBottom="@dimen/activity_vertical_margin"
++    android:paddingLeft="@dimen/activity_horizontal_margin"
++    android:paddingRight="@dimen/activity_horizontal_margin"
++    android:paddingTop="@dimen/activity_vertical_margin"
++    android:theme="@style/ThemeOverlay.AppCompat.Dark" android:orientation="vertical"
++    android:gravity="bottom">
++
++    <ImageView android:layout_width="wrap_content" android:layout_height="wrap_content"
++        android:paddingTop="@dimen/nav_header_vertical_spacing"
++        android:src="@drawable/default_male" android:id="@+id/imageView" />
++
++    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
++        android:paddingTop="@dimen/nav_header_vertical_spacing" android:text="Rafał Góźdź"
++        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
++
++    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
++        android:text="rafal.gozdz@pollub.pl" android:id="@+id/textView" />
++
++</LinearLayout>
+Index: app/src/main/res/layout/to_accept_layout.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/layout/to_accept_layout.xml	(revision )
++++ app/src/main/res/layout/to_accept_layout.xml	(revision )
+@@ -0,0 +1,57 @@
++<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
++    xmlns:tools="http://schemas.android.com/tools"
++    android:layout_width="match_parent"
++    android:layout_height="match_parent"
++    android:padding="10dp">
++
++    <TableRow
++        android:layout_width="match_parent"
++        android:layout_height="match_parent">
++
++        <TextView
++            android:layout_width="match_parent"
++            android:layout_height="wrap_content"
++            android:id="@+id/dzialText"
++            android:text="Dział:"
++            android:layout_column="10"
++            android:layout_marginTop="20dp"
++            android:layout_marginLeft="5dp"
++            android:autoText="false"
++            android:textIsSelectable="false"
++            android:textSize="18dp" />
++
++        <Spinner
++            android:id="@+id/dzial_spinner"
++            android:layout_width="match_parent"
++            android:layout_height="wrap_content"
++            android:spinnerMode="dropdown"
++            android:layout_marginTop="20dp"
++            android:layout_column="67" />
++    </TableRow>
++
++    <TableRow
++        android:layout_width="match_parent"
++        android:layout_height="match_parent">
++
++        <TextView
++            android:layout_width="match_parent"
++            android:layout_height="wrap_content"
++            android:id="@+id/typeText"
++            android:text="Osoba:"
++            android:layout_column="10"
++            android:layout_marginTop="20dp"
++            android:layout_marginLeft="5dp"
++            android:autoText="false"
++            android:textIsSelectable="false"
++            android:textSize="18dp" />
++
++        <Spinner
++            android:id="@+id/osoba_spinner"
++            android:layout_width="match_parent"
++            android:layout_height="wrap_content"
++            android:spinnerMode="dropdown"
++            android:layout_marginTop="20dp"
++            android:layout_column="67" />
++
++    </TableRow>
++</TableLayout>
+\ No newline at end of file
+Index: app/src/main/java/com/example/rafal/projektkancelaria/LoginActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/rafal/projektkancelaria/LoginActivity.java	(revision )
++++ app/src/main/java/com/example/rafal/projektkancelaria/LoginActivity.java	(revision )
+@@ -0,0 +1,96 @@
++package com.example.rafal.projektkancelaria;
++
++import android.app.Activity;
++import android.content.Intent;
++import android.content.SharedPreferences;
++import android.os.AsyncTask;
++import android.os.Bundle;
++import android.view.View;
++import android.widget.Button;
++import android.widget.CheckBox;
++import android.widget.EditText;
++import android.widget.Toast;
++
++/**
++ * Created by rafal on 22.03.2016.
++ */
++public class LoginActivity extends Activity {
++
++    @Override
++    protected void onCreate(Bundle savedInstanceState) {
++        super.onCreate(savedInstanceState);
++        setContentView(R.layout.login_activity);
++
++        final EditText loginField = (EditText)findViewById(R.id.name_login);
++        final EditText passField = (EditText)findViewById(R.id.passText);
++        final CheckBox checkLogin = (CheckBox)findViewById(R.id.checLog);
++        final String PREFS_NAME = "PrefsFile";
++        final String PREF_USERNAME ="username";
++        final String PREF_PASSWORD="password";
++
++        SharedPreferences pref= getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
++        final String loginPref = pref.getString(PREF_USERNAME, null);
++        final String passPref =pref.getString(PREF_PASSWORD,null);
++
++        if(loginPref!=null){
++            checkLogin.setChecked(true);
++        }
++        loginField.setText(loginPref);
++        passField.setText(passPref);
++
++        Button logBtn =(Button)findViewById(R.id.login_button);
++
++        logBtn.setOnClickListener(new View.OnClickListener() {
++            @Override
++            public void onClick(View v) {
++
++                String login = loginField.getText().toString();
++                String pass = passField.getText().toString();
++
++               if(login.trim().contentEquals("rgozdz") && pass.trim().contentEquals("raffi5458")){
++
++                   if(checkLogin.isChecked()) {
++                       getSharedPreferences(PREFS_NAME, MODE_PRIVATE).edit()
++                               .putString(PREF_USERNAME, login)
++                               .putString(PREF_PASSWORD, pass)
++                               .commit();
++                   }else {
++
++                       getSharedPreferences(PREFS_NAME, MODE_PRIVATE).edit().clear().commit();
++                   }
++                    Toast.makeText(getApplicationContext(),"Zalogowano",Toast.LENGTH_SHORT).show();
++                    Intent mainIntent = new Intent(v.getContext() ,MainActivity.class);
++                    LoginActivity.this.startActivity(mainIntent);
++                    finish();
++
++
++                }else
++                    Toast.makeText(getApplicationContext(),"Błędny login lub hasło",Toast.LENGTH_SHORT).show();
++            }
++        });
++    }
++
++    private class RestLoginOperation extends AsyncTask<String ,Void, Void>{
++
++        //final HttpClient httpClient = new DefaultHttpClient();
++
++
++        @Override
++        protected void onPreExecute() {
++            super.onPreExecute();
++        }
++
++        @Override
++        protected Void doInBackground(String... params) {
++
++
++            return null;
++        }
++
++
++        @Override
++        protected void onPostExecute(Void aVoid) {
++            super.onPostExecute(aVoid);
++        }
++    }
++}
+Index: app/src/main/res/values-w820dp/dimens.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/values-w820dp/dimens.xml	(revision )
++++ app/src/main/res/values-w820dp/dimens.xml	(revision )
+@@ -0,0 +1,6 @@
++<resources>
++    <!-- Example customization of dimensions originally defined in res/values/dimens.xml
++         (such as screen margins) for screens with more than 820dp of available width. This
++         would include 7" and 10" devices in landscape (~960dp and ~1280dp respectively). -->
++    <dimen name="activity_horizontal_margin">64dp</dimen>
++</resources>
+Index: ProjektKancelaria.iml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- ProjektKancelaria.iml	(revision )
++++ ProjektKancelaria.iml	(revision )
+@@ -0,0 +1,19 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<module external.linked.project.id="ProjektKancelaria" external.linked.project.path="$MODULE_DIR$" external.root.project.path="$MODULE_DIR$" external.system.id="GRADLE" external.system.module.group="" external.system.module.version="unspecified" type="JAVA_MODULE" version="4">
++  <component name="FacetManager">
++    <facet type="java-gradle" name="Java-Gradle">
++      <configuration>
++        <option name="BUILD_FOLDER_PATH" value="$MODULE_DIR$/build" />
++        <option name="BUILDABLE" value="false" />
++      </configuration>
++    </facet>
++  </component>
++  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_7" inherit-compiler-output="true">
++    <exclude-output />
++    <content url="file://$MODULE_DIR$">
++      <excludeFolder url="file://$MODULE_DIR$/.gradle" />
++    </content>
++    <orderEntry type="inheritedJdk" />
++    <orderEntry type="sourceFolder" forTests="false" />
++  </component>
++</module>
+\ No newline at end of file
+Index: app/src/main/res/menu/menu_context.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/menu/menu_context.xml	(revision )
++++ app/src/main/res/menu/menu_context.xml	(revision )
+@@ -0,0 +1,10 @@
++<?xml version="1.0" encoding="utf-8"?>
++<menu xmlns:android="http://schemas.android.com/apk/res/android">
++
++    <item
++        android:id="@+id/delete"
++        android:title="Usuń wniosek"
++        android:icon="@android:drawable/ic_menu_delete">
++    </item>
++
++</menu>
+\ No newline at end of file
+Index: app/src/main/res/values-v21/styles.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/values-v21/styles.xml	(revision )
++++ app/src/main/res/values-v21/styles.xml	(revision )
+@@ -0,0 +1,8 @@
++<resources>>
++    <style name="AppTheme.NoActionBar">
++        <item name="windowActionBar">false</item>
++        <item name="windowNoTitle">true</item>
++        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
++        <item name="android:statusBarColor">@android:color/transparent</item>
++    </style>
++</resources>
+Index: app/src/main/res/drawable/side_nav_bar.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/drawable/side_nav_bar.xml	(revision )
++++ app/src/main/res/drawable/side_nav_bar.xml	(revision )
+@@ -0,0 +1,9 @@
++<shape xmlns:android="http://schemas.android.com/apk/res/android"
++    android:shape="rectangle" >
++    <gradient
++        android:startColor="#81C784"
++        android:centerColor="#4CAF50"
++        android:endColor="#2E7D32"
++        android:type="linear"
++        android:angle="135"/>
++</shape>
+\ No newline at end of file
+Index: app/src/main/java/com/example/rafal/projektkancelaria/DocumentListViewAdapter.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/rafal/projektkancelaria/DocumentListViewAdapter.java	(revision )
++++ app/src/main/java/com/example/rafal/projektkancelaria/DocumentListViewAdapter.java	(revision )
+@@ -0,0 +1,94 @@
++package com.example.rafal.projektkancelaria;
++
++import android.app.Activity;
++import android.view.LayoutInflater;
++import android.view.View;
++import android.view.ViewGroup;
++import android.widget.BaseAdapter;
++import android.widget.TextView;
++
++import java.util.ArrayList;
++import java.util.HashMap;
++
++import static com.example.rafal.projektkancelaria.ListConstants.DATE_COLUMN;
++import static com.example.rafal.projektkancelaria.ListConstants.NAME_COLUMN;
++import static com.example.rafal.projektkancelaria.ListConstants.STATUS_COLUMN;
++import static com.example.rafal.projektkancelaria.ListConstants.TYPE_COLUMN;
++
++/**
++ * Created by rafal on 27.03.2016.
++ */
++public class DocumentListViewAdapter extends BaseAdapter {
++
++
++    public ArrayList<HashMap<String, String>> list;
++    Activity activity;
++    TextView dateText;
++    TextView nameText;
++    TextView typeText;
++    TextView statusText;
++
++
++    public DocumentListViewAdapter(Activity activity, ArrayList<HashMap<String, String>> list) {
++        super();
++        this.list = list;
++        this.activity=activity;
++    }
++
++
++
++
++    @Override
++    public int getCount() {
++        return list.size();
++    }
++
++    @Override
++    public Object getItem(int position) {
++        return list.get(position);
++    }
++
++    @Override
++    public long getItemId(int position) {
++        return list.indexOf(position);
++    }
++
++    @Override
++    public View getView(int position, View convertView, ViewGroup parent) {
++
++        LayoutInflater inflater=activity.getLayoutInflater();
++
++        if(MainActivity.idCheck!=1){
++
++            convertView = inflater.inflate(R.layout.no_elements_row, null);
++            this.notifyDataSetChanged();
++            return convertView;
++
++        }else if(convertView == null) {
++
++            convertView = inflater.inflate(R.layout.list_row, null);
++            dateText = (TextView) convertView.findViewById(R.id.date);
++            nameText = (TextView) convertView.findViewById(R.id.name);
++            typeText = (TextView) convertView.findViewById(R.id.type);
++            statusText = (TextView) convertView.findViewById(R.id.status);
++        }
++            HashMap<String, String> map=list.get(position);
++            dateText.setText(map.get(DATE_COLUMN));
++            nameText.setText(map.get(NAME_COLUMN));
++            typeText.setText(map.get(TYPE_COLUMN));
++            statusText.setText(map.get(STATUS_COLUMN));
++
++
++        this.notifyDataSetChanged();
++        return convertView;
++    }
++
++    @Override
++    public boolean isEnabled(int position) {
++
++        if (MainActivity.idCheck!=1)
++            return false;
++        else
++            return true;
++    }
++}
+Index: app/src/main/java/com/example/rafal/projektkancelaria/fragment_document.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/rafal/projektkancelaria/fragment_document.java	(revision )
++++ app/src/main/java/com/example/rafal/projektkancelaria/fragment_document.java	(revision )
+@@ -0,0 +1,210 @@
++package com.example.rafal.projektkancelaria;
++
++import android.content.Intent;
++import android.os.Bundle;
++import android.support.v4.app.ListFragment;
++import android.view.ActionMode;
++import android.view.LayoutInflater;
++import android.view.Menu;
++import android.view.MenuItem;
++import android.view.View;
++import android.view.ViewGroup;
++import android.widget.AbsListView;
++import android.widget.ListView;
++import android.widget.Toast;
++
++import java.text.SimpleDateFormat;
++import java.util.ArrayList;
++import java.util.Calendar;
++import java.util.HashMap;
++import java.util.List;
++
++public class fragment_document extends ListFragment {
++
++    private ListView list1;
++    public View listView;
++    public static ArrayList<HashMap<String, String>> list;
++    private Calendar cal;
++    private int selectedCount=0;
++    public static DocumentListViewAdapter adapter;
++    public List<Object> idList;
++
++    @Override
++    public View onCreateView(LayoutInflater inflater, ViewGroup container,
++                             Bundle savedInstanceState) {
++
++
++        View listView =inflater.inflate(R.layout.fragment_fragmet, container, false);
++        list1 = (ListView) listView.findViewById(android.R.id.list);
++        return listView;
++    }
++
++    @Override
++    public void onResume() {
++
++        super.onResume();
++    }
++
++    @Override
++    public void onActivityCreated(Bundle savedInstanceState) {
++        super.onActivityCreated(savedInstanceState);
++
++        idList = new ArrayList<>();
++        list=new ArrayList<HashMap<String,String>>();
++
++
++        SimpleDateFormat dateFormat= new SimpleDateFormat("dd.MM.yyyy hh:mm:ss");
++        cal= Calendar.getInstance();
++        String dateNow = dateFormat.format(cal.getTime());
++        if(MainActivity.idCheck==1) {
++            HashMap<String, String> temp = new HashMap<String, String>();
++            temp.put(ListConstants.DATE_COLUMN, dateNow);
++            temp.put(ListConstants.NAME_COLUMN, "Dokument ws. budowy chodnika");
++            temp.put(ListConstants.STATUS_COLUMN, "Oczekuję");
++            temp.put(ListConstants.TYPE_COLUMN, "Wniosek");
++            temp.put(ListConstants.DESCRIBTION_COLUMN, "W przypadku faktury wystawionej" +
++                    " w walucie obcej i stanowiącej dowód poświadczający poniesienie wydatku " +
++                    "w ramach projektu, w celu rozliczenia faktury (uwzględnienia we wniosku o " +
++                    "płatność), konieczne jest przeliczenie wartości zapłaconej faktury na walutę polską." +
++                    " W takim przypadku należy zastosować kurs z dnia, w którym beneficjent opłacił fakturę. ");
++            list.add(temp);
++
++            HashMap<String, String> temp2 = new HashMap<String, String>();
++            temp2.put(ListConstants.DATE_COLUMN, dateNow);
++            temp2.put(ListConstants.NAME_COLUMN, "Wniosek urlopowy");
++            temp2.put(ListConstants.STATUS_COLUMN, "Odrzucono");
++            temp2.put(ListConstants.TYPE_COLUMN, "Wniosek");
++            temp2.put(ListConstants.DESCRIBTION_COLUMN, "W przypadku faktury wystawionej" +
++                    " w walucie obcej i stanowiącej dowód poświadczający poniesienie wydatku " +
++                    "w ramach projektu, w celu rozliczenia faktury (uwzględnienia we wniosku o " +
++                    "płatność), konieczne jest przeliczenie wartości zapłaconej faktury na walutę polską." +
++                    " W takim przypadku należy zastosować kurs z dnia, w którym beneficjent opłacił fakturę. ");
++            list.add(temp2);
++
++            HashMap<String, String> temp3 = new HashMap<String, String>();
++            temp3.put(ListConstants.DATE_COLUMN, dateNow);
++            temp3.put(ListConstants.NAME_COLUMN, "Akta sprawy");
++            temp3.put(ListConstants.STATUS_COLUMN, "Zatwierdzono");
++            temp3.put(ListConstants.TYPE_COLUMN, "Akta");
++            temp3.put(ListConstants.DESCRIBTION_COLUMN, "W przypadku faktury wystawionej" +
++                    " w walucie obcej i stanowiącej dowód poświadczający poniesienie wydatku " +
++                    "w ramach projektu, w celu rozliczenia faktury (uwzględnienia we wniosku o " +
++                    "płatność), konieczne jest przeliczenie wartości zapłaconej faktury na walutę polską." +
++                    " W takim przypadku należy zastosować kurs z dnia, w którym beneficjent opłacił fakturę. ");
++            list.add(temp3);
++
++            HashMap<String, String> temp4 = new HashMap<String, String>();
++            temp4.put(ListConstants.DATE_COLUMN, dateNow);
++            temp4.put(ListConstants.NAME_COLUMN, "Dokument ws. budowy chodnika");
++            temp4.put(ListConstants.STATUS_COLUMN, "Zatwierdzono");
++            temp4.put(ListConstants.TYPE_COLUMN, "Akta");
++            temp4.put(ListConstants.DESCRIBTION_COLUMN, "W przypadku faktury wystawionej" +
++                    " w walucie obcej i stanowiącej dowód poświadczający poniesienie wydatku " +
++                    "w ramach projektu, w celu rozliczenia faktury (uwzględnienia we wniosku o " +
++                    "płatność), konieczne jest przeliczenie wartości zapłaconej faktury na walutę polską." +
++                    " W takim przypadku należy zastosować kurs z dnia, w którym beneficjent opłacił fakturę. ");
++            list.add(temp4);
++        }if(MainActivity.idCheck!=1){
++
++            HashMap<String, String> temp = new HashMap<String, String>();
++            list.add(temp);
++
++        }
++
++        adapter=new DocumentListViewAdapter(getActivity(), list);
++        list1.setAdapter(adapter);
++        list1.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
++        list1.setItemsCanFocus(false);
++
++        list1.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {
++            @Override
++            public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
++
++                if (list1.isItemChecked(position)) {
++                    selectedCount++;
++                    idList.add(list.get(position));
++                } else {
++                    selectedCount--;
++                    idList.remove(list.get(position));
++                }
++                if (selectedCount == 1) {
++
++                    MainActivity.fabEdit.show();
++                } else if (selectedCount != 1 && MainActivity.fabEdit.isShown()) {
++                    MainActivity.fabEdit.hide();
++                }
++                //list1.getItemAtPosition(position);
++                mode.setTitle("Zaznaczono " + selectedCount + " elem.");
++            }
++
++            @Override
++            public boolean onCreateActionMode(ActionMode mode, Menu menu) {
++
++//                MenuInflater inflater = mode.getMenuInflater();
++//                inflater.inflate(R.menu.menu_context,menu);
++                MainActivity.fab.hide();
++                MainActivity.fabDelete.show();
++
++                return true;
++            }
++
++            @Override
++            public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
++
++
++                return false;
++            }
++
++            @Override
++            public boolean onActionItemClicked(ActionMode mode, MenuItem item) {return false;}
++
++            @Override
++            public void onDestroyActionMode(ActionMode mode) {
++
++                if (MainActivity.fabEdit.isShown()) {
++                    MainActivity.fabEdit.hide();
++                }
++                MainActivity.fab.show();
++                MainActivity.fabDelete.hide();
++                selectedCount = 0;
++            }
++        });
++
++        MainActivity.fabDelete.setOnClickListener(new View.OnClickListener() {
++            @Override
++            public void onClick(View v) {
++
++
++                list.removeAll(idList);
++                adapter.notifyDataSetChanged();
++                Toast.makeText(getContext(),"Usunięto "
++                        +idList.size()+" elem.",Toast.LENGTH_SHORT).show();
++
++                list1.clearFocus();
++
++            }
++        });
++
++
++    }
++
++    @Override
++    public void onListItemClick(ListView l, View v, int position, long id) {
++
++        String nameDokBundle= list.get(position).get(ListConstants.NAME_COLUMN).toString();
++        String typeDokBundle= list.get(position).get(ListConstants.TYPE_COLUMN).toString();
++        String statusDokBundle= list.get(position).get(ListConstants.STATUS_COLUMN).toString();
++        String describtionDokBundle= list.get(position).get(ListConstants.DESCRIBTION_COLUMN).toString(); //in future
++        Intent intent = new Intent(getContext(),DocumentDetails.class);
++        intent.putExtra("NAME",nameDokBundle);
++        intent.putExtra("TYPE",typeDokBundle);
++        intent.putExtra("STATUS",statusDokBundle);
++        intent.putExtra("DESCRIBTION",describtionDokBundle);
++
++        this.startActivity(intent);
++        super.onListItemClick(l, v, position, id);
++
++
++
++    }
++}
+Index: app/src/main/res/layout/activity_main.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/layout/activity_main.xml	(revision )
++++ app/src/main/res/layout/activity_main.xml	(revision )
+@@ -0,0 +1,16 @@
++<?xml version="1.0" encoding="utf-8"?>
++<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
++    xmlns:app="http://schemas.android.com/apk/res-auto"
++    xmlns:tools="http://schemas.android.com/tools" android:id="@+id/drawer_layout"
++    android:layout_width="match_parent" android:layout_height="match_parent"
++    android:fitsSystemWindows="true" tools:openDrawer="start">
++
++    <include layout="@layout/app_bar_main" android:layout_width="match_parent"
++        android:layout_height="match_parent" />
++
++    <android.support.design.widget.NavigationView android:id="@+id/nav_view"
++        android:layout_width="wrap_content" android:layout_height="match_parent"
++        android:layout_gravity="start" android:fitsSystemWindows="true"
++        app:headerLayout="@layout/nav_header_main" app:menu="@menu/activity_main_drawer" />
++
++</android.support.v4.widget.DrawerLayout>
+Index: gradlew.bat
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- gradlew.bat	(revision )
++++ gradlew.bat	(revision )
+@@ -0,0 +1,90 @@
++@if "%DEBUG%" == "" @echo off
++@rem ##########################################################################
++@rem
++@rem  Gradle startup script for Windows
++@rem
++@rem ##########################################################################
++
++@rem Set local scope for the variables with windows NT shell
++if "%OS%"=="Windows_NT" setlocal
++
++@rem Add default JVM options here. You can also use JAVA_OPTS and GRADLE_OPTS to pass JVM options to this script.
++set DEFAULT_JVM_OPTS=
++
++set DIRNAME=%~dp0
++if "%DIRNAME%" == "" set DIRNAME=.
++set APP_BASE_NAME=%~n0
++set APP_HOME=%DIRNAME%
++
++@rem Find java.exe
++if defined JAVA_HOME goto findJavaFromJavaHome
++
++set JAVA_EXE=java.exe
++%JAVA_EXE% -version >NUL 2>&1
++if "%ERRORLEVEL%" == "0" goto init
++
++echo.
++echo ERROR: JAVA_HOME is not set and no 'java' command could be found in your PATH.
++echo.
++echo Please set the JAVA_HOME variable in your environment to match the
++echo location of your Java installation.
++
++goto fail
++
++:findJavaFromJavaHome
++set JAVA_HOME=%JAVA_HOME:"=%
++set JAVA_EXE=%JAVA_HOME%/bin/java.exe
++
++if exist "%JAVA_EXE%" goto init
++
++echo.
++echo ERROR: JAVA_HOME is set to an invalid directory: %JAVA_HOME%
++echo.
++echo Please set the JAVA_HOME variable in your environment to match the
++echo location of your Java installation.
++
++goto fail
++
++:init
++@rem Get command-line arguments, handling Windowz variants
++
++if not "%OS%" == "Windows_NT" goto win9xME_args
++if "%@eval[2+2]" == "4" goto 4NT_args
++
++:win9xME_args
++@rem Slurp the command line arguments.
++set CMD_LINE_ARGS=
++set _SKIP=2
++
++:win9xME_args_slurp
++if "x%~1" == "x" goto execute
++
++set CMD_LINE_ARGS=%*
++goto execute
++
++:4NT_args
++@rem Get arguments from the 4NT Shell from JP Software
++set CMD_LINE_ARGS=%$
++
++:execute
++@rem Setup the command line
++
++set CLASSPATH=%APP_HOME%\gradle\wrapper\gradle-wrapper.jar
++
++@rem Execute Gradle
++"%JAVA_EXE%" %DEFAULT_JVM_OPTS% %JAVA_OPTS% %GRADLE_OPTS% "-Dorg.gradle.appname=%APP_BASE_NAME%" -classpath "%CLASSPATH%" org.gradle.wrapper.GradleWrapperMain %CMD_LINE_ARGS%
++
++:end
++@rem End local scope for the variables with windows NT shell
++if "%ERRORLEVEL%"=="0" goto mainEnd
++
++:fail
++rem Set variable GRADLE_EXIT_CONSOLE if you need the _script_ return code instead of
++rem the _cmd.exe /c_ return code!
++if  not "" == "%GRADLE_EXIT_CONSOLE%" exit 1
++exit /b 1
++
++:mainEnd
++if "%OS%"=="Windows_NT" endlocal
++
++:omega
+Index: app/src/main/java/com/example/rafal/projektkancelaria/ListConstants.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/rafal/projektkancelaria/ListConstants.java	(revision )
++++ app/src/main/java/com/example/rafal/projektkancelaria/ListConstants.java	(revision )
+@@ -0,0 +1,19 @@
++package com.example.rafal.projektkancelaria;
++
++/**
++ * Created by rafal on 27.03.2016.
++ */
++public class ListConstants {
++
++
++    public static final String DATE_COLUMN="First";
++    public static final String NAME_COLUMN="Second";
++    public static final String TYPE_COLUMN="Third";
++    public static final String STATUS_COLUMN="Fourth";
++    public static final String DESCRIBTION_COLUMN="Extra";
++    public static String dName;
++    public static String dType;
++    public static String dDescribtion;
++
++
++}
+Index: app/src/main/res/values/colors.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/values/colors.xml	(revision )
++++ app/src/main/res/values/colors.xml	(revision )
+@@ -0,0 +1,6 @@
++<?xml version="1.0" encoding="utf-8"?>
++<resources>
++    <color name="colorPrimary">#3F51B5</color>
++    <color name="colorPrimaryDark">#303F9F</color>
++    <color name="colorAccent">#FF4081</color>
++</resources>
+Index: app/src/main/java/com/example/rafal/projektkancelaria/MainActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/rafal/projektkancelaria/MainActivity.java	(revision )
++++ app/src/main/java/com/example/rafal/projektkancelaria/MainActivity.java	(revision )
+@@ -0,0 +1,165 @@
++package com.example.rafal.projektkancelaria;
++
++import android.content.Intent;
++import android.os.Bundle;
++import android.os.Handler;
++import android.support.design.widget.FloatingActionButton;
++import android.support.design.widget.NavigationView;
++import android.support.v4.view.GravityCompat;
++import android.support.v4.widget.DrawerLayout;
++import android.support.v7.app.ActionBarDrawerToggle;
++import android.support.v7.app.AppCompatActivity;
++import android.support.v7.widget.Toolbar;
++import android.view.MenuItem;
++import android.view.View;
++import android.widget.Toast;
++
++//import java.util.logging.Handler;
++
++public class MainActivity extends AppCompatActivity
++        implements NavigationView.OnNavigationItemSelectedListener {
++
++    NavigationView navigationView;
++    Toolbar toolbar;
++    boolean doubleBackPress;
++    public static FloatingActionButton fab;
++    public static FloatingActionButton fabDelete;
++    public static FloatingActionButton fabEdit;
++    public static int idCheck=1;
++
++
++    @Override
++    protected void onCreate(Bundle savedInstanceState) {
++        super.onCreate(savedInstanceState);
++        setContentView(R.layout.activity_main);
++        this.overridePendingTransition(R.anim.animation_enter,R.anim.animation_leave);
++        fragment_document fragment =new fragment_document();
++        android.support.v4.app.FragmentTransaction fragmentTransaction =
++                getSupportFragmentManager().beginTransaction();
++        fragmentTransaction.replace(R.id.fragment_container, fragment);
++        fragmentTransaction.commit();
++
++        toolbar = (Toolbar) findViewById(R.id.toolbar);
++        setSupportActionBar(toolbar);
++
++        fab = (FloatingActionButton) findViewById(R.id.fab);
++        fabDelete =(FloatingActionButton) findViewById(R.id.fabDelete);
++        fabEdit =(FloatingActionButton) findViewById(R.id.fabEdit);
++        fabDelete.hide();
++        fabEdit.hide();
++
++        fab.setOnClickListener(new View.OnClickListener() {
++            @Override
++            public void onClick(View view) {
++
++                AddDocumentDialog dialog = new AddDocumentDialog();
++                dialog.show(getFragmentManager(), "My alert");
++//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
++//                        .setAction("Action", null).show();
++            }
++        });
++
++        fabEdit.setOnClickListener(new View.OnClickListener() {
++            @Override
++            public void onClick(View v) {
++
++                EditDocumentDialog dialog = new EditDocumentDialog();
++                //dialog.setArguments();
++                dialog.show(getFragmentManager(), "My alert");
++
++            }
++        });
++
++
++        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
++        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
++                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
++        drawer.setDrawerListener(toggle);
++        toggle.syncState();
++
++        navigationView = (NavigationView) findViewById(R.id.nav_view);
++        navigationView.setNavigationItemSelectedListener(this);
++
++    }
++
++    @Override
++    public void onBackPressed() {
++        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
++        if (drawer.isDrawerOpen(GravityCompat.START)) {
++            drawer.closeDrawer(GravityCompat.START);
++        } else if(doubleBackPress){
++            super.onBackPressed();
++        }else{
++
++            doubleBackPress=true;
++            Toast.makeText(this,"Naciśnij drugi raz aby wyjść",Toast.LENGTH_SHORT).show();
++            new Handler().postDelayed(new Runnable() {
++                @Override
++                public void run() {
++                    doubleBackPress=false;
++                }
++            },2000);
++        }
++    }
++
++//    @Override
++//    public boolean onCreateOptionsMenu(Menu menu) {
++//        // Inflate the menu; this adds items to the action bar if it is present.
++//        getMenuInflater().inflate(R.menu.main, menu);
++//        return true;
++//    }
++
++
++    @SuppressWarnings("StatementWithEmptyBody")
++    @Override
++    public boolean onNavigationItemSelected(MenuItem item) {
++        // Handle navigation view item clicks here.
++        int id = item.getItemId();
++
++
++        switch (id){
++            case R.id.nav_logout:
++                Intent loguotIntent = new Intent(getApplicationContext(), LoginActivity.class);
++                startActivity(loguotIntent);
++                finish();
++                break;
++            case R.id.nav_documents:
++                idCheck=1;
++                getSupportActionBar().setTitle("Lista wniosków");
++                fragment_document fragment =new fragment_document();
++                android.support.v4.app.FragmentTransaction fragmentTransaction =
++                        getSupportFragmentManager().beginTransaction();
++                fragmentTransaction.replace(R.id.fragment_container, fragment);
++                fragmentTransaction.commit();
++                break;
++            case R.id.nav_acceptation:
++                idCheck=2;
++                getSupportActionBar().setTitle("Wnioski do akceptacji");
++                fragment_document fragmentAccept =new fragment_document();
++                fragmentTransaction =
++                        getSupportFragmentManager().beginTransaction();
++                fragmentTransaction.replace(R.id.fragment_container, fragmentAccept);
++                fragmentTransaction.commit();
++                break;
++            case R.id.nav_waitting:
++
++                idCheck=3;
++                getSupportActionBar().setTitle("Oczekujące na akceptacje");
++                fragment_document fragmentWait =new fragment_document();
++                fragmentTransaction =
++                        getSupportFragmentManager().beginTransaction();
++                fragmentTransaction.replace(R.id.fragment_container, fragmentWait);
++                fragmentTransaction.commit();
++                break;
++            case R.id.nav_photo:
++                EditUserDialog editDialog = new EditUserDialog();
++                editDialog.show(getSupportFragmentManager(),"photoEdit");
++                break;
++        }
++
++
++        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
++        drawer.closeDrawer(GravityCompat.START);
++        return true;
++    }
++}
+Index: app/src/main/res/values/styles.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/values/styles.xml	(revision )
++++ app/src/main/res/values/styles.xml	(revision )
+@@ -0,0 +1,19 @@
++<resources>
++
++    <!-- Base application theme. -->
++    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
++        <!-- Customize your theme here. -->
++        <item name="colorPrimary">@color/colorPrimary</item>
++        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
++        <item name="colorAccent">@color/colorAccent</item>
++        <item name="windowActionModeOverlay">true</item>
++        <item name="android:activatedBackgroundIndicator">@drawable/muliple_selected_item</item>
++    </style>
++    <style name="AppTheme.NoActionBar">
++        <item name="windowActionBar">false</item>
++        <item name="windowNoTitle">true</item>
++    </style>
++    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
++    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
++
++</resources>
+Index: app/src/main/res/anim/animation_leave.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/anim/animation_leave.xml	(revision )
++++ app/src/main/res/anim/animation_leave.xml	(revision )
+@@ -0,0 +1,8 @@
++<?xml version="1.0" encoding="utf-8"?>
++<set xmlns:android="http://schemas.android.com/apk/res/android"
++    android:shareInterpolator="false">
++    <translate
++        android:fromXDelta="0%" android:toXDelta="100%"
++        android:fromYDelta="0%" android:toYDelta="0%"
++        android:duration="300" />
++</set>
+\ No newline at end of file
+Index: .idea/encodings.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/encodings.xml	(revision )
++++ .idea/encodings.xml	(revision )
+@@ -0,0 +1,6 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="Encoding">
++    <file url="PROJECT" charset="UTF-8" />
++  </component>
++</project>
+\ No newline at end of file
+Index: gradle.properties
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>windows-1250
+===================================================================
+--- gradle.properties	(revision )
++++ gradle.properties	(revision )
+@@ -0,0 +1,18 @@
++# Project-wide Gradle settings.
++
++# IDE (e.g. Android Studio) users:
++# Gradle settings configured through the IDE *will override*
++# any settings specified in this file.
++
++# For more details on how to configure your build environment visit
++# http://www.gradle.org/docs/current/userguide/build_environment.html
++
++# Specifies the JVM arguments used for the daemon process.
++# The setting is particularly useful for tweaking memory settings.
++# Default value: -Xmx10248m -XX:MaxPermSize=256m
++# org.gradle.jvmargs=-Xmx2048m -XX:MaxPermSize=512m -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8
++
++# When configured, Gradle will run in incubating parallel mode.
++# This option should only be used with decoupled projects. More details, visit
++# http://www.gradle.org/docs/current/userguide/multi_project_builds.html#sec:decoupled_projects
++# org.gradle.parallel=true
+\ No newline at end of file
+Index: app/src/main/res/drawable/muliple_selected_item.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/drawable/muliple_selected_item.xml	(revision )
++++ app/src/main/res/drawable/muliple_selected_item.xml	(revision )
+@@ -0,0 +1,6 @@
++<?xml version="1.0" encoding="utf-8"?>
++<selector xmlns:android="http://schemas.android.com/apk/res/android">
++    <item android:state_activated="true" android:drawable="@color/colorPrimary" />
++
++    <item android:drawable="@android:color/transparent" />
++</selector>
+\ No newline at end of file
+Index: app/src/main/res/layout/document_details.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/layout/document_details.xml	(revision )
++++ app/src/main/res/layout/document_details.xml	(revision )
+@@ -0,0 +1,89 @@
++<?xml version="1.0" encoding="utf-8"?>
++<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
++    android:orientation="vertical" android:layout_width="match_parent"
++    android:layout_height="match_parent">
++
++    <ImageView
++    android:layout_width="match_parent"
++    android:layout_height="200dp"
++    android:src="@drawable/note3"
++    android:id="@+id/dok_icon"
++    android:layout_alignParentStart="true"
++    android:layout_toStartOf="@+id/doc_test"
++        android:layout_alignParentTop="true" />
++
++    <TextView
++        android:layout_width="wrap_content"
++        android:layout_height="wrap_content"
++        android:id="@+id/doc_test"
++        android:text="Tytuł: "
++        android:layout_marginTop="60dp"
++        android:layout_centerHorizontal="true" />
++
++    <TextView
++        android:layout_width="wrap_content"
++        android:layout_height="wrap_content"
++        android:id="@+id/textView2"
++        android:text="Typ: "
++        android:layout_marginTop="28dp"
++        android:layout_below="@+id/doc_test"
++        android:layout_toEndOf="@+id/dok_icon" />
++
++    <TextView
++        android:layout_width="wrap_content"
++        android:layout_height="wrap_content"
++        android:id="@+id/textView3"
++        android:text="Status: "
++        android:layout_marginTop="28dp"
++        android:layout_below="@+id/textView2"
++        android:layout_toEndOf="@+id/dok_icon" />
++
++    <TextView
++        android:layout_width="wrap_content"
++        android:layout_height="wrap_content"
++        android:id="@+id/textView4"
++        android:text="Opis: "
++        android:layout_below="@+id/dok_icon"
++        android:layout_alignParentStart="true"
++        android:layout_marginStart="21dp" />
++
++    <TextView
++        android:layout_width="wrap_content"
++        android:layout_height="wrap_content"
++        android:id="@+id/textViewName"
++        android:layout_alignTop="@+id/doc_test"
++        android:layout_alignParentEnd="true"
++        android:layout_toEndOf="@+id/textView3"
++        android:textStyle="bold"/>
++
++    <TextView
++        android:layout_width="wrap_content"
++        android:layout_height="wrap_content"
++        android:id="@+id/textViewType"
++        android:textStyle="bold"
++        android:layout_alignTop="@+id/textView2"
++        android:layout_alignParentEnd="true"
++        android:layout_toEndOf="@+id/textView3"
++        android:layout_above="@+id/textView3" />
++
++    <TextView
++        android:layout_width="wrap_content"
++        android:layout_height="wrap_content"
++        android:id="@+id/textViewStatus"
++        android:textStyle="bold"
++        android:layout_alignTop="@+id/textView3"
++        android:layout_alignParentEnd="true"
++        android:layout_alignStart="@+id/textViewType" />
++
++    <TextView
++        android:layout_width="wrap_content"
++        android:layout_height="wrap_content"
++        android:id="@+id/textViewDescribtion"
++        android:textStyle="bold"
++        android:layout_below="@+id/textView4"
++        android:layout_alignStart="@+id/textView4"
++        android:layout_marginTop="20dp"
++        android:layout_alignParentEnd="true"
++        android:layout_alignParentBottom="true" />
++
++</RelativeLayout>
+\ No newline at end of file
+Index: app/src/main/java/com/example/rafal/projektkancelaria/DocumentListView.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/rafal/projektkancelaria/DocumentListView.java	(revision )
++++ app/src/main/java/com/example/rafal/projektkancelaria/DocumentListView.java	(revision )
+@@ -0,0 +1,78 @@
++package com.example.rafal.projektkancelaria;
++
++import android.app.Activity;
++import android.view.LayoutInflater;
++import android.view.View;
++import android.view.ViewGroup;
++import android.widget.BaseAdapter;
++import android.widget.TextView;
++
++import java.util.ArrayList;
++import java.util.HashMap;
++
++import static com.example.rafal.projektkancelaria.ListConstants.DATE_COLUMN;
++import static com.example.rafal.projektkancelaria.ListConstants.NAME_COLUMN;
++import static com.example.rafal.projektkancelaria.ListConstants.STATUS_COLUMN;
++import static com.example.rafal.projektkancelaria.ListConstants.TYPE_COLUMN;
++
++/**
++ * Created by rafal on 27.03.2016.
++ */
++public class DocumentListView extends BaseAdapter {
++
++
++    public ArrayList<HashMap<String, String>> list;
++    Activity activity;
++    TextView dateText;
++    TextView nameText;
++    TextView typeText;
++    TextView statusText;
++
++
++    public DocumentListView(Activity activity,ArrayList<HashMap<String, String>> list) {
++        super();
++        this.list = list;
++        this.activity=activity;
++    }
++
++
++
++
++    @Override
++    public int getCount() {
++        return list.size();
++    }
++
++    @Override
++    public Object getItem(int position) {
++        return list.get(position);
++    }
++
++    @Override
++    public long getItemId(int position) {
++        return list.indexOf(position);
++    }
++
++    @Override
++    public View getView(int position, View convertView, ViewGroup parent) {
++
++        LayoutInflater inflater=activity.getLayoutInflater();
++
++        if(convertView == null) {
++
++            convertView = inflater.inflate(R.layout.list_row, null);
++            dateText = (TextView) convertView.findViewById(R.id.date);
++            nameText = (TextView) convertView.findViewById(R.id.name);
++            typeText = (TextView) convertView.findViewById(R.id.type);
++            statusText = (TextView) convertView.findViewById(R.id.status);
++        }
++            HashMap<String, String> map=list.get(position);
++            dateText.setText(map.get(DATE_COLUMN));
++            nameText.setText(map.get(NAME_COLUMN));
++            typeText.setText(map.get(TYPE_COLUMN));
++            statusText.setText(map.get(STATUS_COLUMN));
++
++        this.notifyDataSetChanged();
++        return convertView;
++    }
++}
+Index: app/src/main/res/menu/activity_main_drawer.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/menu/activity_main_drawer.xml	(revision )
++++ app/src/main/res/menu/activity_main_drawer.xml	(revision )
+@@ -0,0 +1,24 @@
++<?xml version="1.0" encoding="utf-8"?>
++<menu xmlns:android="http://schemas.android.com/apk/res/android">
++
++    <item android:title="Kancelaria">
++        <menu>
++            <item android:id="@+id/nav_documents" android:icon="@drawable/document"
++                android:title="Wnioski" />
++            <item android:id="@+id/nav_acceptation" android:icon="@drawable/to_accept"
++                android:title="Do akceptacji" />
++            <item android:id="@+id/nav_waitting" android:icon="@drawable/wait_for_accept"
++                android:title="Przekazane do akceptacji" />
++
++        </menu>
++    </item>
++
++    <group android:checkableBehavior="single">
++        <item android:id="@+id/nav_photo" android:icon="@drawable/ic_face_black"
++            android:title="Edycja danych użytkownika" />
++        <item android:id="@+id/nav_logout" android:icon="@android:drawable/ic_lock_power_off"
++            android:title="Wyloguj" />
++
++    </group>
++
++</menu>
+\ No newline at end of file
+Index: .idea/.name
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/.name	(revision )
++++ .idea/.name	(revision )
+@@ -0,0 +1,1 @@
++ProjektKancelaria
+\ No newline at end of file
+Index: app/app.iml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/app.iml	(revision )
++++ app/app.iml	(revision )
+@@ -0,0 +1,105 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<module external.linked.project.id=":app" external.linked.project.path="$MODULE_DIR$" external.root.project.path="$MODULE_DIR$/.." external.system.id="GRADLE" external.system.module.group="ProjektKancelaria" external.system.module.version="unspecified" type="JAVA_MODULE" version="4">
++  <component name="FacetManager">
++    <facet type="android-gradle" name="Android-Gradle">
++      <configuration>
++        <option name="GRADLE_PROJECT_PATH" value=":app" />
++      </configuration>
++    </facet>
++    <facet type="android" name="Android">
++      <configuration>
++        <option name="SELECTED_BUILD_VARIANT" value="debug" />
++        <option name="SELECTED_TEST_ARTIFACT" value="_android_test_" />
++        <option name="ASSEMBLE_TASK_NAME" value="assembleDebug" />
++        <option name="COMPILE_JAVA_TASK_NAME" value="compileDebugSources" />
++        <option name="ASSEMBLE_TEST_TASK_NAME" value="assembleDebugAndroidTest" />
++        <option name="COMPILE_JAVA_TEST_TASK_NAME" value="compileDebugAndroidTestSources" />
++        <afterSyncTasks>
++          <task>generateDebugAndroidTestSources</task>
++          <task>generateDebugSources</task>
++        </afterSyncTasks>
++        <option name="ALLOW_USER_CONFIGURATION" value="false" />
++        <option name="MANIFEST_FILE_RELATIVE_PATH" value="/src/main/AndroidManifest.xml" />
++        <option name="RES_FOLDER_RELATIVE_PATH" value="/src/main/res" />
++        <option name="RES_FOLDERS_RELATIVE_PATH" value="file://$MODULE_DIR$/src/main/res" />
++        <option name="ASSETS_FOLDER_RELATIVE_PATH" value="/src/main/assets" />
++      </configuration>
++    </facet>
++  </component>
++  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_7" inherit-compiler-output="false">
++    <output url="file://$MODULE_DIR$/build/intermediates/classes/debug" />
++    <output-test url="file://$MODULE_DIR$/build/intermediates/classes/androidTest/debug" />
++    <exclude-output />
++    <content url="file://$MODULE_DIR$">
++      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/r/debug" isTestSource="false" generated="true" />
++      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/aidl/debug" isTestSource="false" generated="true" />
++      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/buildConfig/debug" isTestSource="false" generated="true" />
++      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/rs/debug" isTestSource="false" generated="true" />
++      <sourceFolder url="file://$MODULE_DIR$/build/generated/res/rs/debug" type="java-resource" />
++      <sourceFolder url="file://$MODULE_DIR$/build/generated/res/resValues/debug" type="java-resource" />
++      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/r/androidTest/debug" isTestSource="true" generated="true" />
++      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/aidl/androidTest/debug" isTestSource="true" generated="true" />
++      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/buildConfig/androidTest/debug" isTestSource="true" generated="true" />
++      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/rs/androidTest/debug" isTestSource="true" generated="true" />
++      <sourceFolder url="file://$MODULE_DIR$/build/generated/res/rs/androidTest/debug" type="java-test-resource" />
++      <sourceFolder url="file://$MODULE_DIR$/build/generated/res/resValues/androidTest/debug" type="java-test-resource" />
++      <sourceFolder url="file://$MODULE_DIR$/src/debug/res" type="java-resource" />
++      <sourceFolder url="file://$MODULE_DIR$/src/debug/resources" type="java-resource" />
++      <sourceFolder url="file://$MODULE_DIR$/src/debug/assets" type="java-resource" />
++      <sourceFolder url="file://$MODULE_DIR$/src/debug/aidl" isTestSource="false" />
++      <sourceFolder url="file://$MODULE_DIR$/src/debug/java" isTestSource="false" />
++      <sourceFolder url="file://$MODULE_DIR$/src/debug/jni" isTestSource="false" />
++      <sourceFolder url="file://$MODULE_DIR$/src/debug/rs" isTestSource="false" />
++      <sourceFolder url="file://$MODULE_DIR$/src/main/res" type="java-resource" />
++      <sourceFolder url="file://$MODULE_DIR$/src/main/resources" type="java-resource" />
++      <sourceFolder url="file://$MODULE_DIR$/src/main/assets" type="java-resource" />
++      <sourceFolder url="file://$MODULE_DIR$/src/main/aidl" isTestSource="false" />
++      <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
++      <sourceFolder url="file://$MODULE_DIR$/src/main/jni" isTestSource="false" />
++      <sourceFolder url="file://$MODULE_DIR$/src/main/rs" isTestSource="false" />
++      <sourceFolder url="file://$MODULE_DIR$/src/androidTest/res" type="java-test-resource" />
++      <sourceFolder url="file://$MODULE_DIR$/src/androidTest/resources" type="java-test-resource" />
++      <sourceFolder url="file://$MODULE_DIR$/src/androidTest/assets" type="java-test-resource" />
++      <sourceFolder url="file://$MODULE_DIR$/src/androidTest/aidl" isTestSource="true" />
++      <sourceFolder url="file://$MODULE_DIR$/src/androidTest/java" isTestSource="true" />
++      <sourceFolder url="file://$MODULE_DIR$/src/androidTest/jni" isTestSource="true" />
++      <sourceFolder url="file://$MODULE_DIR$/src/androidTest/rs" isTestSource="true" />
++      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/assets" />
++      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/bundles" />
++      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/classes" />
++      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/coverage-instrumented-classes" />
++      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/dependency-cache" />
++      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/dex" />
++      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/dex-cache" />
++      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.android.support/animated-vector-drawable/23.2.1/jars" />
++      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.2.1/jars" />
++      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.android.support/design/23.2.1/jars" />
++      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/23.2.1/jars" />
++      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.android.support/support-v4/23.2.1/jars" />
++      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.android.support/support-vector-drawable/23.2.1/jars" />
++      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/incremental" />
++      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/jacoco" />
++      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/javaResources" />
++      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/libs" />
++      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/lint" />
++      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/manifests" />
++      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/ndk" />
++      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/pre-dexed" />
++      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/proguard" />
++      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/res" />
++      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/rs" />
++      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/symbols" />
++      <excludeFolder url="file://$MODULE_DIR$/build/outputs" />
++      <excludeFolder url="file://$MODULE_DIR$/build/tmp" />
++    </content>
++    <orderEntry type="jdk" jdkName="Android API 23 Platform" jdkType="Android SDK" />
++    <orderEntry type="sourceFolder" forTests="false" />
++    <orderEntry type="library" exported="" name="recyclerview-v7-23.2.1" level="project" />
++    <orderEntry type="library" exported="" name="support-v4-23.2.1" level="project" />
++    <orderEntry type="library" exported="" name="support-annotations-23.2.1" level="project" />
++    <orderEntry type="library" exported="" name="animated-vector-drawable-23.2.1" level="project" />
++    <orderEntry type="library" exported="" name="support-vector-drawable-23.2.1" level="project" />
++    <orderEntry type="library" exported="" name="design-23.2.1" level="project" />
++    <orderEntry type="library" exported="" name="appcompat-v7-23.2.1" level="project" />
++  </component>
++</module>
+\ No newline at end of file
+Index: app/src/main/res/layout/app_bar_main.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/layout/app_bar_main.xml	(revision )
++++ app/src/main/res/layout/app_bar_main.xml	(revision )
+@@ -0,0 +1,44 @@
++<?xml version="1.0" encoding="utf-8"?>
++<RelativeLayout
++    xmlns:android="http://schemas.android.com/apk/res/android"
++    xmlns:app="http://schemas.android.com/apk/res-auto"
++    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
++    android:layout_height="match_parent" android:fitsSystemWindows="true"
++    tools:context=".MainActivity">
++
++    <android.support.design.widget.AppBarLayout android:layout_height="wrap_content"
++        android:layout_width="match_parent" android:theme="@style/AppTheme.AppBarOverlay"
++        android:id="@+id/view">
++        <android.support.v7.widget.Toolbar android:id="@+id/toolbar"
++            android:layout_width="match_parent" android:layout_height="?attr/actionBarSize"
++            android:background="?attr/colorPrimary" app:popupTheme="@style/AppTheme.PopupOverlay" />
++
++    </android.support.design.widget.AppBarLayout>
++
++    <include layout="@layout/content_main" />
++
++    <FrameLayout
++        android:layout_width="match_parent"
++        android:layout_height="match_parent"
++        android:id="@+id/fragment_container"
++        android:layout_below="@+id/view">
++
++        <android.support.design.widget.FloatingActionButton android:id="@+id/fabDelete"
++            android:background="@color/colorPrimary"
++            android:layout_width="wrap_content" android:layout_height="wrap_content"
++            android:layout_gravity="right|bottom" android:layout_margin="@dimen/fab_margin"
++            android:src="@android:drawable/ic_menu_delete" />
++
++        <android.support.design.widget.FloatingActionButton android:id="@+id/fab"
++            android:layout_width="wrap_content" android:layout_height="wrap_content"
++            android:layout_gravity="right|bottom" android:layout_margin="@dimen/fab_margin"
++            android:src="@android:drawable/ic_menu_add" />
++
++        <android.support.design.widget.FloatingActionButton android:id="@+id/fabEdit"
++            android:layout_width="wrap_content" android:layout_height="wrap_content"
++            android:layout_gravity="left|bottom" android:layout_margin="@dimen/fab_margin"
++            android:src="@android:drawable/ic_menu_edit" />
++
++    </FrameLayout>]
++
++</RelativeLayout>
+Index: app/src/main/java/com/example/rafal/projektkancelaria/ConfirmDialog.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/rafal/projektkancelaria/ConfirmDialog.java	(revision )
++++ app/src/main/java/com/example/rafal/projektkancelaria/ConfirmDialog.java	(revision )
+@@ -0,0 +1,39 @@
++package com.example.rafal.projektkancelaria;
++
++import android.app.AlertDialog;
++import android.app.Dialog;
++import android.content.DialogInterface;
++import android.content.Intent;
++import android.os.Bundle;
++import android.support.v4.app.DialogFragment;
++import android.widget.Toast;
++
++/**
++ * Created by rafal on 08.04.2016.
++ */
++public class ConfirmDialog extends DialogFragment {
++
++    @Override
++    public Dialog onCreateDialog(Bundle savedInstanceState) {
++
++        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
++        builder.setTitle("Akceptacja wniosku");
++        builder.setMessage("Czy chcecsz zaakceptować wniosek?");
++        builder.setPositiveButton("Akceptuj", new DialogInterface.OnClickListener() {
++            @Override
++            public void onClick(DialogInterface dialog, int which) {
++                Intent intent = new Intent(getContext(),MainActivity.class);
++                startActivity(intent);
++                Toast.makeText(getActivity(), "Zaakceptowano wniosek", Toast.LENGTH_SHORT).show();
++            }
++        }).setNegativeButton("Anuluj", new DialogInterface.OnClickListener() {
++            @Override
++            public void onClick(DialogInterface dialog, int which) {
++
++            }
++        });
++
++        Dialog confirm = builder.create();
++        return confirm;
++    }
++}
+Index: app/src/test/java/com/example/rafal/projektkancelaria/ExampleUnitTest.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/test/java/com/example/rafal/projektkancelaria/ExampleUnitTest.java	(revision )
++++ app/src/test/java/com/example/rafal/projektkancelaria/ExampleUnitTest.java	(revision )
+@@ -0,0 +1,15 @@
++package com.example.rafal.projektkancelaria;
++
++import org.junit.Test;
++
++import static org.junit.Assert.*;
++
++/**
++ * To work on unit tests, switch the Test Artifact in the Build Variants view.
++ */
++public class ExampleUnitTest {
++    @Test
++    public void addition_isCorrect() throws Exception {
++        assertEquals(4, 2 + 2);
++    }
++}
+\ No newline at end of file
+Index: app/src/main/res/layout/no_elements_row.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/layout/no_elements_row.xml	(revision )
++++ app/src/main/res/layout/no_elements_row.xml	(revision )
+@@ -0,0 +1,22 @@
++<?xml version="1.0" encoding="utf-8"?>
++    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
++        android:layout_width="match_parent"
++        android:layout_height="match_parent"
++        
++        android:background="?android:attr/activatedBackgroundIndicator"
++        >
++
++        <TextView
++
++            android:layout_height="47dp"
++            android:layout_width="match_parent"
++            android:layout_weight="0.43"
++            android:text="Brak elementów do wyświetlenia"
++            android:textColor="@color/colorAccent"
++            android:textStyle="bold"
++            android:textAlignment="center"
++            android:textSize="@dimen/activity_vertical_margin"
++            android:layout_marginTop="8dp"/>
++
++
++</LinearLayout>
+\ No newline at end of file
+Index: app/src/main/java/com/example/rafal/projektkancelaria/DocumentDetails.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/rafal/projektkancelaria/DocumentDetails.java	(revision )
++++ app/src/main/java/com/example/rafal/projektkancelaria/DocumentDetails.java	(revision )
+@@ -0,0 +1,73 @@
++package com.example.rafal.projektkancelaria;
++
++import android.os.Bundle;
++import android.support.v7.app.ActionBarActivity;
++import android.view.Menu;
++import android.view.MenuItem;
++import android.widget.TextView;
++
++/**
++ * Created by rafal on 30.03.2016.
++ */
++public class DocumentDetails extends ActionBarActivity {
++
++    TextView tName;
++    TextView tType;
++    TextView tStatus;
++    TextView tDescribtion;
++
++    @Override
++    protected void onCreate(Bundle savedInstanceState) {
++        super.onCreate(savedInstanceState);
++        this.overridePendingTransition(R.anim.animation_enter,
++                R.anim.animation_leave);
++
++        setContentView(R.layout.document_details);
++        tName=(TextView)findViewById(R.id.textViewName);
++        tType=(TextView)findViewById(R.id.textViewType);
++        tStatus=(TextView)findViewById(R.id.textViewStatus);
++        tDescribtion=(TextView)findViewById(R.id.textViewDescribtion);
++        Bundle extras = getIntent().getExtras();
++
++        if(extras!=null){
++
++            tName.setText(extras.getString("NAME"));
++            tType.setText(extras.getString("TYPE"));
++            tStatus.setText(extras.getString("STATUS"));
++            tDescribtion.setText(extras.getString("DESCRIBTION"));
++
++        }
++        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
++
++    }
++    @Override
++    public boolean onCreateOptionsMenu(Menu menu) {
++        // Inflate the menu; this adds items to the action bar if it is present.
++        getMenuInflater().inflate(R.menu.main, menu);
++        return true;
++    }
++
++    @Override
++    public boolean onOptionsItemSelected(MenuItem item) {
++        switch (item.getItemId()){
++            case android.R.id.home :
++                onBackPressed();
++                break;
++            case R.id.accept :
++                ConfirmDialog confDialog =new ConfirmDialog();
++                confDialog.show(getSupportFragmentManager(),"akceptacja");
++                break;
++            case R.id.discard :
++                RejectDialog rejectDialog = new RejectDialog();
++                rejectDialog.show(getSupportFragmentManager(),"odrzucanie");
++                break;
++            case R.id.sendToAccept:
++                ToAcceptDialog acceptDialog = new ToAcceptDialog();
++                acceptDialog.show(getSupportFragmentManager(),"dekretowanie");
++                break;
++            default:
++                break;
++        }
++        return true;
++    }
++}
+Index: app/src/main/res/menu/main.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/menu/main.xml	(revision )
++++ app/src/main/res/menu/main.xml	(revision )
+@@ -0,0 +1,32 @@
++<menu xmlns:android="http://schemas.android.com/apk/res/android"
++    xmlns:app="http://schemas.android.com/apk/res-auto"
++    xmlns:tools="http://schemas.android.com/tools" tools:context=".DocumentDetails">
++
++    <item android:id="@+id/accept"
++          android:title="akceptuj"
++          android:orderInCategory="2"
++          app:showAsAction="ifRoom"
++          android:icon="@drawable/ic_check_white"
++          >
++
++    </item>
++
++    <item android:id="@+id/discard"
++        android:title="odrzuć"
++        android:orderInCategory="3"
++        app:showAsAction="ifRoom"
++        android:icon="@drawable/ic_close_white"
++        >
++
++    </item>
++
++    <item android:id="@+id/sendToAccept"
++        android:title="Przekaż do akceptacji"
++        android:orderInCategory="1"
++        app:showAsAction="ifRoom"
++        android:icon="@drawable/ic_to_accept_white"
++        >
++
++    </item>
++
++</menu>
+Index: settings.gradle
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- settings.gradle	(revision )
++++ settings.gradle	(revision )
+@@ -0,0 +1,1 @@
++include ':app'
+Index: app/src/main/res/values/strings.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/values/strings.xml	(revision )
++++ app/src/main/res/values/strings.xml	(revision )
+@@ -0,0 +1,16 @@
++<resources>
++
++    <string name="app_documents">Lista wniosków</string>
++    <string name="app_name">Projekt kancelaria</string>
++    <string name="app_to_accept_doc">Wnioski do akceptacji</string>
++    <string name="app_waitting_for_accept">Oczekujące na akceptacje</string>
++    <string name="app_detalis">Szczegóły wniosku</string>
++    <string name="navigation_drawer_open">Open navigation drawer</string>
++    <string name="navigation_drawer_close">Close navigation drawer</string>
++    <string name="login_button">Zaloguj</string>
++    <string name="add_document">Dodaj</string>
++    <string name="save_document">Zapisz</string>
++    <string name="cancel_adding">Anuluj</string>
++
++
++</resources>
+Index: .idea/runConfigurations.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/runConfigurations.xml	(revision )
++++ .idea/runConfigurations.xml	(revision )
+@@ -0,0 +1,12 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="RunConfigurationProducerService">
++    <option name="ignoredProducers">
++      <set>
++        <option value="org.jetbrains.plugins.gradle.execution.test.runner.AllInPackageGradleConfigurationProducer" />
++        <option value="org.jetbrains.plugins.gradle.execution.test.runner.TestClassGradleConfigurationProducer" />
++        <option value="org.jetbrains.plugins.gradle.execution.test.runner.TestMethodGradleConfigurationProducer" />
++      </set>
++    </option>
++  </component>
++</project>
+\ No newline at end of file
+Index: .idea/compiler.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/compiler.xml	(revision )
++++ .idea/compiler.xml	(revision )
+@@ -0,0 +1,22 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="CompilerConfiguration">
++    <resourceExtensions />
++    <wildcardResourcePatterns>
++      <entry name="!?*.java" />
++      <entry name="!?*.form" />
++      <entry name="!?*.class" />
++      <entry name="!?*.groovy" />
++      <entry name="!?*.scala" />
++      <entry name="!?*.flex" />
++      <entry name="!?*.kt" />
++      <entry name="!?*.clj" />
++      <entry name="!?*.aj" />
++    </wildcardResourcePatterns>
++    <annotationProcessing>
++      <profile default="true" name="Default" enabled="false">
++        <processorPath useClasspath="true" />
++      </profile>
++    </annotationProcessing>
++  </component>
++</project>
+\ No newline at end of file
+Index: app/src/main/res/layout/fragment_fragmet.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/layout/fragment_fragmet.xml	(revision )
++++ app/src/main/res/layout/fragment_fragmet.xml	(revision )
+@@ -0,0 +1,19 @@
++<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
++    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
++    android:layout_height="match_parent"
++    tools:context="com.example.rafal.projektkancelaria.fragment_document">
++
++    <!-- TODO: Update blank fragment layout -->
++
++    <ListView
++        android:id="@android:id/list"
++        android:layout_width="match_parent"
++        android:layout_height="wrap_content"
++        android:layout_alignParentLeft="true"
++        android:layout_alignParentTop="true"
++        android:listSelector="@drawable/muliple_selected_item"
++        android:layout_gravity="center_horizontal|top">
++    </ListView>
++
++
++</FrameLayout>
+Index: app/src/main/java/com/example/rafal/projektkancelaria/ToAcceptDialog.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/rafal/projektkancelaria/ToAcceptDialog.java	(revision )
++++ app/src/main/java/com/example/rafal/projektkancelaria/ToAcceptDialog.java	(revision )
+@@ -0,0 +1,74 @@
++package com.example.rafal.projektkancelaria;
++
++import android.app.AlertDialog;
++import android.app.Dialog;
++import android.content.DialogInterface;
++import android.content.Intent;
++import android.os.Bundle;
++import android.support.annotation.NonNull;
++import android.support.v4.app.DialogFragment;
++import android.view.View;
++import android.widget.ArrayAdapter;
++import android.widget.Spinner;
++import android.widget.Toast;
++
++import java.util.ArrayList;
++
++/**
++ * Created by rafal on 09.04.2016.
++ */
++public class ToAcceptDialog extends DialogFragment {
++
++
++    @NonNull
++    @Override
++    public Dialog onCreateDialog(Bundle savedInstanceState) {
++
++        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
++
++        ArrayList<String> department = new ArrayList<String>();
++        department.add("Strostwo");
++        department.add("Wicestarostwo");
++        department.add("Księgowość");
++        department.add("HR");
++
++        ArrayList<String> persons = new ArrayList<String>();
++        persons.add("Kowalski Jan");
++        persons.add("Włodzimierz Kasprzak");
++        persons.add("Janina Pasek");
++        persons.add("Rafał Przybylski");
++
++        View view = getActivity().getLayoutInflater().inflate(R.layout.to_accept_layout, null);
++        builder.setView(view);
++        final Spinner dzialSpinner = (Spinner)view.findViewById(R.id.dzial_spinner);
++        final Spinner osbaSpinner =(Spinner)view.findViewById(R.id.osoba_spinner);
++        ArrayAdapter<String> dzialAdapter = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_spinner_item, department);
++        ArrayAdapter<String> osobyAdapter = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_spinner_item,persons);
++
++        dzialSpinner.setAdapter(dzialAdapter);
++        osbaSpinner.setAdapter(osobyAdapter);
++
++        builder.setTitle("Przekaż do akceptacji");
++        builder.setMessage("Wybierz osobę, której ma być przekazany wniosek");
++
++        builder.setPositiveButton("Dekretuj", new DialogInterface.OnClickListener() {
++            @Override
++            public void onClick(DialogInterface dialog, int which) {
++                Intent intent = new Intent(getContext(),MainActivity.class);
++                startActivity(intent);
++                String personToAccept = osbaSpinner.getSelectedItem().toString();
++                String departmentToAccept =dzialSpinner.getSelectedItem().toString();
++                Toast.makeText(getActivity(), "Zadekretowano wniosek na "+personToAccept+" w dziale "+departmentToAccept, Toast.LENGTH_SHORT).show();
++            }
++        }).setNegativeButton("Anuluj", new DialogInterface.OnClickListener() {
++            @Override
++            public void onClick(DialogInterface dialog, int which) {
++
++            }
++        });
++
++        Dialog dialog = builder.create();
++
++        return dialog;
++    }
++}
+Index: app/src/main/java/com/example/rafal/projektkancelaria/EditUserDialog.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/rafal/projektkancelaria/EditUserDialog.java	(revision )
++++ app/src/main/java/com/example/rafal/projektkancelaria/EditUserDialog.java	(revision )
+@@ -0,0 +1,48 @@
++package com.example.rafal.projektkancelaria;
++
++import android.app.AlertDialog;
++import android.app.Dialog;
++import android.content.DialogInterface;
++import android.content.Intent;
++import android.os.Bundle;
++import android.provider.MediaStore;
++import android.support.v4.app.DialogFragment;
++
++/**
++ * Created by rafal on 30.04.2016.
++ */
++public class EditUserDialog extends DialogFragment {
++
++    @Override
++    public Dialog onCreateDialog(Bundle savedInstanceState) {
++
++        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
++        builder.setTitle("Edycja danych użytkownika");
++        builder.setMessage("Wybierz opcje edycji danych użytkownika");
++        builder.setNegativeButton("Anuluj", new DialogInterface.OnClickListener() {
++            @Override
++            public void onClick(DialogInterface dialog, int which) {
++                dismiss();
++            }
++        });
++
++        builder.setNeutralButton("Dodaj zdjęcie", new DialogInterface.OnClickListener() {
++            @Override
++            public void onClick(DialogInterface dialog, int which) {
++
++                Intent takePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
++                startActivityForResult(takePicture, 0);//zero can be replaced with any action code
++            }
++        });
++
++        builder.setPositiveButton("Edytuj dane", new DialogInterface.OnClickListener() {
++            @Override
++            public void onClick(DialogInterface dialog, int which) {
++
++            }
++        });
++        Dialog editDialog = builder.create();
++
++        return editDialog;
++    }
++}
+Index: app/src/main/AndroidManifest.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/AndroidManifest.xml	(revision )
++++ app/src/main/AndroidManifest.xml	(revision )
+@@ -0,0 +1,41 @@
++<?xml version="1.0" encoding="utf-8"?>
++<manifest xmlns:android="http://schemas.android.com/apk/res/android"
++    package="com.example.rafal.projektkancelaria"
++    android:versionCode="1"
++    android:versionName="1.0" >
++
++    <uses-sdk
++        android:minSdkVersion="22"
++        android:targetSdkVersion="23" />
++
++    <uses-permission android:name="android.permission.CAPTURE_VIDEO_OUTPUT" />
++    <uses-permission android:name="android.permission.INTERNET" />
++
++    <application
++        android:allowBackup="true"
++        android:icon="@mipmap/ic_launcher"
++        android:label="@string/app_name"
++        android:supportsRtl="true"
++        android:theme="@style/AppTheme" >
++        <activity
++            android:name="com.example.rafal.projektkancelaria.LoginActivity"
++            android:theme="@style/AppTheme.NoActionBar" >
++            <intent-filter>
++                <action android:name="android.intent.action.MAIN" />
++
++                <category android:name="android.intent.category.LAUNCHER" />
++            </intent-filter>
++        </activity>
++        <activity
++            android:name="com.example.rafal.projektkancelaria.MainActivity"
++            android:label="@string/app_documents"
++            android:theme="@style/AppTheme.NoActionBar" >
++        </activity>
++        <activity
++            android:name="com.example.rafal.projektkancelaria.DocumentDetails"
++            android:label="@string/app_detalis"
++            android:theme="@style/AppTheme" >
++        </activity>
++    </application>
++
++</manifest>
+\ No newline at end of file
+Index: app/src/main/java/com/example/rafal/projektkancelaria/AddDocumentDialog.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/rafal/projektkancelaria/AddDocumentDialog.java	(revision )
++++ app/src/main/java/com/example/rafal/projektkancelaria/AddDocumentDialog.java	(revision )
+@@ -0,0 +1,101 @@
++package com.example.rafal.projektkancelaria;
++
++import android.app.AlertDialog;
++import android.app.Dialog;
++import android.app.DialogFragment;
++import android.content.DialogInterface;
++import android.os.Bundle;
++import android.view.View;
++import android.widget.ArrayAdapter;
++import android.widget.EditText;
++import android.widget.Spinner;
++import android.widget.Toast;
++
++import java.text.SimpleDateFormat;
++import java.util.ArrayList;
++import java.util.Calendar;
++import java.util.HashMap;
++import java.util.List;
++
++
++public class AddDocumentDialog extends DialogFragment {
++
++
++    private Calendar cal;
++    private EditText nameField;
++    private Spinner typeField;
++    private EditText describtionField;
++
++
++    @Override
++    public Dialog onCreateDialog(Bundle savedInstanceState) {
++        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
++        builder.setTitle("Rejestrowanie wniosku");
++        builder.setMessage("Wprowadź dane wniosku");
++
++
++        View view = getActivity().getLayoutInflater().inflate(R.layout.add_layout, null);
++        nameField= (EditText)view.findViewById(R.id.dok_name);
++        typeField =(Spinner)view.findViewById(R.id.type_spinner);
++        describtionField =(EditText)view.findViewById(R.id.dok_describtion);
++
++        List<String> categories = new ArrayList<String>();
++        categories.add("Wniosek o podwyżkę");
++        categories.add("Wniosek o urop");
++        categories.add("Decyzja");
++        categories.add("Plan urlopowy");
++
++        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, categories);
++        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
++        typeField.setAdapter(dataAdapter);
++
++
++        builder.setView(view)
++                .setPositiveButton(R.string.add_document, new DialogInterface.OnClickListener() {
++                    @Override
++                    public void onClick(DialogInterface dialog, int which) {
++
++                        SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy hh:mm:ss");
++                        cal = Calendar.getInstance();
++                        String dateNow = dateFormat.format(cal.getTime());
++
++                        String name = nameField.getText().toString();
++                        String type = typeField.getSelectedItem().toString();
++                        String desctibtion =describtionField.getText().toString();
++
++                        if(!name.isEmpty())
++                        {
++                            HashMap<String, String> temp = new HashMap<String, String>();
++                            temp.put(ListConstants.DATE_COLUMN, dateNow);
++                            temp.put(ListConstants.NAME_COLUMN, name);
++                            temp.put(ListConstants.STATUS_COLUMN, "Nowy");
++                            temp.put(ListConstants.TYPE_COLUMN, type);
++                            temp.put(ListConstants.DESCRIBTION_COLUMN, desctibtion);
++                            fragment_document.list.add(temp);
++                            fragment_document.adapter.notifyDataSetChanged();
++
++                            Toast.makeText(getActivity(), "Dodano dokument " + name, Toast.LENGTH_SHORT).show();
++
++                            //dialog.dismiss();
++                        }else{
++                            nameField.setHint("Nie podano tytułu");
++                        }
++                    }
++                }).setNegativeButton(R.string.cancel_adding, new DialogInterface.OnClickListener() {
++            @Override
++            public void onClick(DialogInterface dialog, int which) {
++                dialog.dismiss();
++            }
++        });
++
++        Dialog dialog=builder.create();
++
++        return dialog;
++
++
++    }
++
++
++
++
++}
+Index: app/src/main/res/anim/animation_enter.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/anim/animation_enter.xml	(revision )
++++ app/src/main/res/anim/animation_enter.xml	(revision )
+@@ -0,0 +1,7 @@
++<?xml version="1.0" encoding="utf-8"?>
++<set xmlns:android="http://schemas.android.com/apk/res/android"
++    android:shareInterpolator="false">
++    <translate android:fromXDelta="-100%" android:toXDelta="0%"
++        android:fromYDelta="0%" android:toYDelta="0%"
++        android:duration="300"/>
++</set>
+\ No newline at end of file
+Index: .idea/gradle.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/gradle.xml	(revision )
++++ .idea/gradle.xml	(revision )
+@@ -0,0 +1,19 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="GradleSettings">
++    <option name="linkedExternalProjectsSettings">
++      <GradleProjectSettings>
++        <option name="distributionType" value="LOCAL" />
++        <option name="externalProjectPath" value="$PROJECT_DIR$" />
++        <option name="gradleHome" value="D:\toWork\Android\gradle\gradle-2.4" />
++        <option name="gradleJvm" value="1.7" />
++        <option name="modules">
++          <set>
++            <option value="$PROJECT_DIR$" />
++            <option value="$PROJECT_DIR$/app" />
++          </set>
++        </option>
++      </GradleProjectSettings>
++    </option>
++  </component>
++</project>
+\ No newline at end of file
+Index: app/src/main/res/layout/add_layout.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/layout/add_layout.xml	(revision )
++++ app/src/main/res/layout/add_layout.xml	(revision )
+@@ -0,0 +1,61 @@
++<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
++    xmlns:tools="http://schemas.android.com/tools"
++    android:layout_width="match_parent"
++    android:layout_height="match_parent"
++    android:padding="10dp">
++
++    <TableRow
++        android:layout_height="wrap_content"
++        android:layout_width="fill_parent">
++
++    <EditText
++        android:id="@+id/dok_name"
++        android:layout_width="fill_parent"
++        android:layout_height="wrap_content"
++        android:inputType="text"
++        android:hint="Tytuł dokumentu"
++        android:layout_span="60"
++        android:layout_weight="0.20" />
++
++    </TableRow>
++
++    <TableRow
++        android:layout_width="match_parent"
++        android:layout_height="match_parent">
++
++        <TextView
++            android:layout_width="match_parent"
++            android:layout_height="wrap_content"
++            android:id="@+id/typeText"
++            android:text="Rodzaj:"
++            android:layout_column="10"
++            android:layout_marginTop="20dp"
++            android:layout_marginLeft="5dp"
++            android:autoText="false"
++            android:textIsSelectable="false"
++            android:textSize="18dp" />
++
++        <Spinner
++            android:id="@+id/type_spinner"
++            android:layout_width="match_parent"
++            android:layout_height="wrap_content"
++            android:spinnerMode="dropdown"
++            android:layout_marginTop="20dp"
++            android:layout_column="67" />
++    </TableRow>
++
++    <TableRow
++        android:layout_width="match_parent"
++        android:layout_height="match_parent">
++
++    <EditText
++        android:id="@+id/dok_describtion"
++        android:layout_width="match_parent"
++        android:layout_height="wrap_content"
++        android:inputType="text"
++        android:hint="Opis"
++        android:layout_weight="0.20"
++        android:layout_span="60" />
++
++    </TableRow>
++</TableLayout>
+\ No newline at end of file
+Index: .idea/modules.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/modules.xml	(revision )
++++ .idea/modules.xml	(revision )
+@@ -0,0 +1,9 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="ProjectModuleManager">
++    <modules>
++      <module fileurl="file://$PROJECT_DIR$/ProjektKancelaria.iml" filepath="$PROJECT_DIR$/ProjektKancelaria.iml" />
++      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
++    </modules>
++  </component>
++</project>
+\ No newline at end of file
+Index: .idea/vcs.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/vcs.xml	(revision )
++++ .idea/vcs.xml	(revision )
+@@ -0,0 +1,6 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="VcsDirectoryMappings">
++    <mapping directory="" vcs="Git" />
++  </component>
++</project>
+\ No newline at end of file
+Index: app/.gitignore
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/.gitignore	(revision )
++++ app/.gitignore	(revision )
+@@ -0,0 +1,1 @@
++/build
+Index: app/src/main/res/values/dimens.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/values/dimens.xml	(revision )
++++ app/src/main/res/values/dimens.xml	(revision )
+@@ -0,0 +1,9 @@
++<resources>
++    <!-- Default screen margins, per the Android Design guidelines. -->
++    <dimen name="nav_header_vertical_spacing">16dp</dimen>
++    <dimen name="nav_header_height">160dp</dimen>
++    <!-- Default screen margins, per the Android Design guidelines. -->
++    <dimen name="activity_horizontal_margin">16dp</dimen>
++    <dimen name="activity_vertical_margin">16dp</dimen>
++    <dimen name="fab_margin">16dp</dimen>
++</resources>
+Index: .gitignore
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .gitignore	(revision )
++++ .gitignore	(revision )
+@@ -0,0 +1,7 @@
++.gradle
++/local.properties
++/.idea/workspace.xml
++/.idea/libraries
++.DS_Store
++/build
++/captures
+Index: app/build.gradle
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/build.gradle	(revision )
++++ app/build.gradle	(revision )
+@@ -0,0 +1,28 @@
++apply plugin: 'com.android.application'
++
++android {
++    compileSdkVersion 23
++    buildToolsVersion "23.0.1"
++
++    defaultConfig {
++        applicationId "com.example.rafal.projektkancelaria"
++        minSdkVersion 22
++        targetSdkVersion 23
++        versionCode 1
++        versionName "1.0"
++    }
++    buildTypes {
++        release {
++            minifyEnabled false
++            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
++        }
++    }
++}
++
++dependencies {
++    compile fileTree(dir: 'libs', include: ['*.jar'])
++    testCompile 'junit:junit:4.12'
++    compile 'com.android.support:appcompat-v7:23.2.1'
++    compile 'com.android.support:support-v4:23.2.1'
++    compile 'com.android.support:design:23.2.1'
++}
+Index: app/src/main/java/com/example/rafal/projektkancelaria/RejectDialog.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/rafal/projektkancelaria/RejectDialog.java	(revision )
++++ app/src/main/java/com/example/rafal/projektkancelaria/RejectDialog.java	(revision )
+@@ -0,0 +1,43 @@
++package com.example.rafal.projektkancelaria;
++
++import android.app.AlertDialog;
++import android.app.Dialog;
++import android.content.DialogInterface;
++import android.content.Intent;
++import android.os.Bundle;
++import android.support.v4.app.DialogFragment;
++import android.widget.Toast;
++
++/**
++ * Created by rafal on 08.04.2016.
++ */
++public class RejectDialog extends DialogFragment {
++
++
++    @Override
++    public Dialog onCreateDialog(Bundle savedInstanceState) {
++
++
++        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
++        builder.setTitle("Odrzucenie wniosku");
++        builder.setMessage("Czy na pewno chcesz odrzucic wniosek");
++
++        builder.setPositiveButton("Odrzuć", new DialogInterface.OnClickListener() {
++            @Override
++            public void onClick(DialogInterface dialog, int which) {
++                Intent intent = new Intent(getContext(),MainActivity.class);
++                startActivity(intent);
++                Toast.makeText(getActivity(),"Odrzucono wniosek",Toast.LENGTH_SHORT).show();
++            }
++        }).setNegativeButton("Anuluj", new DialogInterface.OnClickListener() {
++            @Override
++            public void onClick(DialogInterface dialog, int which) {
++
++            }
++        });
++
++        Dialog dialog = builder.create();
++
++        return dialog;
++    }
++}
+Index: gradle/wrapper/gradle-wrapper.properties
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>windows-1250
+===================================================================
+--- gradle/wrapper/gradle-wrapper.properties	(revision )
++++ gradle/wrapper/gradle-wrapper.properties	(revision )
+@@ -0,0 +1,6 @@
++#Tue Mar 22 15:33:12 CET 2016
++distributionBase=GRADLE_USER_HOME
++distributionPath=wrapper/dists
++zipStoreBase=GRADLE_USER_HOME
++zipStorePath=wrapper/dists
++distributionUrl=https\://services.gradle.org/distributions/gradle-2.4-all.zip
+Index: build.gradle
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- build.gradle	(revision )
++++ build.gradle	(revision )
+@@ -0,0 +1,23 @@
++// Top-level build file where you can add configuration options common to all sub-projects/modules.
++
++buildscript {
++    repositories {
++        jcenter()
++    }
++    dependencies {
++        classpath 'com.android.tools.build:gradle:1.3.0'
++
++        // NOTE: Do not place your application dependencies here; they belong
++        // in the individual module build.gradle files
++    }
++}
++
++allprojects {
++    repositories {
++        jcenter()
++    }
++}
++
++task clean(type: Delete) {
++    delete rootProject.buildDir
++}
+Index: app/src/main/res/layout/login_activity.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/layout/login_activity.xml	(revision )
++++ app/src/main/res/layout/login_activity.xml	(revision )
+@@ -0,0 +1,58 @@
++<?xml version="1.0" encoding="utf-8"?>
++<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
++    android:orientation="vertical" android:layout_width="match_parent"
++    android:layout_height="match_parent">
++
++    <EditText
++        android:layout_width="177dp"
++        android:layout_height="wrap_content"
++        android:id="@+id/name_login"
++        android:layout_gravity="center_horizontal"
++        android:layout_alignStart="@+id/passText"
++        android:layout_above="@+id/passText"
++        android:layout_alignEnd="@+id/passText"
++        android:hint="Login"/>
++
++    <EditText
++        android:layout_width="wrap_content"
++        android:layout_height="wrap_content"
++        android:inputType="textPassword"
++        android:ems="10"
++        android:id="@+id/passText"
++        android:layout_alignParentBottom="true"
++        android:layout_centerHorizontal="true"
++        android:layout_marginBottom="171dp"
++        android:hint="Hasło"/>
++
++    <Button
++        android:layout_width="wrap_content"
++        android:layout_height="wrap_content"
++        android:text="@string/login_button"
++        android:id="@+id/login_button"
++        android:layout_marginTop="78dp"
++        android:layout_below="@+id/name_login"
++        android:layout_centerHorizontal="true" />
++
++    <TextView
++        android:layout_width="wrap_content"
++        android:layout_height="wrap_content"
++        android:text="Zapamiętaj mnie"
++        android:id="@+id/textRemember"
++        android:textSize="16dp"
++        android:layout_marginTop="7dp"
++
++        android:layout_alignTop="@+id/checLog"
++        android:layout_alignBottom="@+id/checLog"
++        android:layout_alignEnd="@+id/login_button" />
++
++
++    <CheckBox
++        android:layout_width="match_parent"
++        android:layout_height="wrap_content"
++        android:id="@+id/checLog"
++        android:layout_marginTop="40dp"
++        android:layout_below="@+id/name_login"
++        android:layout_alignStart="@+id/passText"
++        android:layout_toStartOf="@+id/login_button" />
++
++</RelativeLayout>
+\ No newline at end of file
+Index: gradlew
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- gradlew	(revision )
++++ gradlew	(revision )
+@@ -0,0 +1,164 @@
++#!/usr/bin/env bash
++
++##############################################################################
++##
++##  Gradle start up script for UN*X
++##
++##############################################################################
++
++# Add default JVM options here. You can also use JAVA_OPTS and GRADLE_OPTS to pass JVM options to this script.
++DEFAULT_JVM_OPTS=""
++
++APP_NAME="Gradle"
++APP_BASE_NAME=`basename "$0"`
++
++# Use the maximum available, or set MAX_FD != -1 to use that value.
++MAX_FD="maximum"
++
++warn ( ) {
++    echo "$*"
++}
++
++die ( ) {
++    echo
++    echo "$*"
++    echo
++    exit 1
++}
++
++# OS specific support (must be 'true' or 'false').
++cygwin=false
++msys=false
++darwin=false
++case "`uname`" in
++  CYGWIN* )
++    cygwin=true
++    ;;
++  Darwin* )
++    darwin=true
++    ;;
++  MINGW* )
++    msys=true
++    ;;
++esac
++
++# For Cygwin, ensure paths are in UNIX format before anything is touched.
++if $cygwin ; then
++    [ -n "$JAVA_HOME" ] && JAVA_HOME=`cygpath --unix "$JAVA_HOME"`
++fi
++
++# Attempt to set APP_HOME
++# Resolve links: $0 may be a link
++PRG="$0"
++# Need this for relative symlinks.
++while [ -h "$PRG" ] ; do
++    ls=`ls -ld "$PRG"`
++    link=`expr "$ls" : '.*-> \(.*\)$'`
++    if expr "$link" : '/.*' > /dev/null; then
++        PRG="$link"
++    else
++        PRG=`dirname "$PRG"`"/$link"
++    fi
++done
++SAVED="`pwd`"
++cd "`dirname \"$PRG\"`/" >&-
++APP_HOME="`pwd -P`"
++cd "$SAVED" >&-
++
++CLASSPATH=$APP_HOME/gradle/wrapper/gradle-wrapper.jar
++
++# Determine the Java command to use to start the JVM.
++if [ -n "$JAVA_HOME" ] ; then
++    if [ -x "$JAVA_HOME/jre/sh/java" ] ; then
++        # IBM's JDK on AIX uses strange locations for the executables
++        JAVACMD="$JAVA_HOME/jre/sh/java"
++    else
++        JAVACMD="$JAVA_HOME/bin/java"
++    fi
++    if [ ! -x "$JAVACMD" ] ; then
++        die "ERROR: JAVA_HOME is set to an invalid directory: $JAVA_HOME
++
++Please set the JAVA_HOME variable in your environment to match the
++location of your Java installation."
++    fi
++else
++    JAVACMD="java"
++    which java >/dev/null 2>&1 || die "ERROR: JAVA_HOME is not set and no 'java' command could be found in your PATH.
++
++Please set the JAVA_HOME variable in your environment to match the
++location of your Java installation."
++fi
++
++# Increase the maximum file descriptors if we can.
++if [ "$cygwin" = "false" -a "$darwin" = "false" ] ; then
++    MAX_FD_LIMIT=`ulimit -H -n`
++    if [ $? -eq 0 ] ; then
++        if [ "$MAX_FD" = "maximum" -o "$MAX_FD" = "max" ] ; then
++            MAX_FD="$MAX_FD_LIMIT"
++        fi
++        ulimit -n $MAX_FD
++        if [ $? -ne 0 ] ; then
++            warn "Could not set maximum file descriptor limit: $MAX_FD"
++        fi
++    else
++        warn "Could not query maximum file descriptor limit: $MAX_FD_LIMIT"
++    fi
++fi
++
++# For Darwin, add options to specify how the application appears in the dock
++if $darwin; then
++    GRADLE_OPTS="$GRADLE_OPTS \"-Xdock:name=$APP_NAME\" \"-Xdock:icon=$APP_HOME/media/gradle.icns\""
++fi
++
++# For Cygwin, switch paths to Windows format before running java
++if $cygwin ; then
++    APP_HOME=`cygpath --path --mixed "$APP_HOME"`
++    CLASSPATH=`cygpath --path --mixed "$CLASSPATH"`
++
++    # We build the pattern for arguments to be converted via cygpath
++    ROOTDIRSRAW=`find -L / -maxdepth 1 -mindepth 1 -type d 2>/dev/null`
++    SEP=""
++    for dir in $ROOTDIRSRAW ; do
++        ROOTDIRS="$ROOTDIRS$SEP$dir"
++        SEP="|"
++    done
++    OURCYGPATTERN="(^($ROOTDIRS))"
++    # Add a user-defined pattern to the cygpath arguments
++    if [ "$GRADLE_CYGPATTERN" != "" ] ; then
++        OURCYGPATTERN="$OURCYGPATTERN|($GRADLE_CYGPATTERN)"
++    fi
++    # Now convert the arguments - kludge to limit ourselves to /bin/sh
++    i=0
++    for arg in "$@" ; do
++        CHECK=`echo "$arg"|egrep -c "$OURCYGPATTERN" -`
++        CHECK2=`echo "$arg"|egrep -c "^-"`                                 ### Determine if an option
++
++        if [ $CHECK -ne 0 ] && [ $CHECK2 -eq 0 ] ; then                    ### Added a condition
++            eval `echo args$i`=`cygpath --path --ignore --mixed "$arg"`
++        else
++            eval `echo args$i`="\"$arg\""
++        fi
++        i=$((i+1))
++    done
++    case $i in
++        (0) set -- ;;
++        (1) set -- "$args0" ;;
++        (2) set -- "$args0" "$args1" ;;
++        (3) set -- "$args0" "$args1" "$args2" ;;
++        (4) set -- "$args0" "$args1" "$args2" "$args3" ;;
++        (5) set -- "$args0" "$args1" "$args2" "$args3" "$args4" ;;
++        (6) set -- "$args0" "$args1" "$args2" "$args3" "$args4" "$args5" ;;
++        (7) set -- "$args0" "$args1" "$args2" "$args3" "$args4" "$args5" "$args6" ;;
++        (8) set -- "$args0" "$args1" "$args2" "$args3" "$args4" "$args5" "$args6" "$args7" ;;
++        (9) set -- "$args0" "$args1" "$args2" "$args3" "$args4" "$args5" "$args6" "$args7" "$args8" ;;
++    esac
++fi
++
++# Split up the JVM_OPTS And GRADLE_OPTS values into an array, following the shell quoting and substitution rules
++function splitJvmOpts() {
++    JVM_OPTS=("$@")
++}
++eval splitJvmOpts $DEFAULT_JVM_OPTS $JAVA_OPTS $GRADLE_OPTS
++JVM_OPTS[${#JVM_OPTS[*]}]="-Dorg.gradle.appname=$APP_BASE_NAME"
++
++exec "$JAVACMD" "${JVM_OPTS[@]}" -classpath "$CLASSPATH" org.gradle.wrapper.GradleWrapperMain "$@"

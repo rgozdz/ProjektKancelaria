@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:title="Kancelaria">
+        <menu>
+            <item android:id="@+id/nav_documents" android:icon="@drawable/document"
+                android:title="Wnioski" />
+            <item android:id="@+id/nav_acceptation" android:icon="@drawable/to_accept"
+                android:title="Do akceptacji" />
+            <item android:id="@+id/nav_waitting" android:icon="@drawable/wait_for_accept"
+                android:title="Przekazane do akceptacji" />
+
+        </menu>
+    </item>
+
+    <group android:checkableBehavior="single">
+        <item android:id="@+id/nav_photo" android:icon="@drawable/ic_face_black"
+            android:title="Edycja danych użytkownika" />
+        <item android:id="@+id/nav_logout" android:icon="@android:drawable/ic_lock_power_off"
+            android:title="Wyloguj" />
+
+    </group>
+
+</menu>
