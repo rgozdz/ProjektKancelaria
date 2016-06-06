@@ -11,9 +11,5 @@ public class ListConstants {
     public static final String TYPE_COLUMN="Third";
     public static final String STATUS_COLUMN="Fourth";
     public static final String DESCRIBTION_COLUMN="Extra";
-    public static String dName;
-    public static String dType;
-    public static String dDescribtion;
-
 
 }

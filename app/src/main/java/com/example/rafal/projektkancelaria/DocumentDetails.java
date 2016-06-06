@@ -1,7 +1,7 @@
 package com.example.rafal.projektkancelaria;
 
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -9,7 +9,7 @@ import android.widget.TextView;
 /**
  * Created by rafal on 30.03.2016.
  */
-public class DocumentDetails extends ActionBarActivity {
+public class DocumentDetails extends AppCompatActivity {
 
     TextView tName;
     TextView tType;

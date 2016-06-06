@@ -1,6 +1,7 @@
 package com.example.rafal.projektkancelaria;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -11,10 +12,17 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+
 /**
  * Created by rafal on 22.03.2016.
  */
 public class LoginActivity extends Activity {
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +32,9 @@ public class LoginActivity extends Activity {
         final EditText loginField = (EditText)findViewById(R.id.name_login);
         final EditText passField = (EditText)findViewById(R.id.passText);
         final CheckBox checkLogin = (CheckBox)findViewById(R.id.checLog);
+        final ProgressDialog progresDialog = new ProgressDialog(this);
+        progresDialog.setMessage("Trwa logowanie");
+        progresDialog.setCancelable(false);
         final String PREFS_NAME = "PrefsFile";
         final String PREF_USERNAME ="username";
         final String PREF_PASSWORD="password";
@@ -38,6 +49,8 @@ public class LoginActivity extends Activity {
         loginField.setText(loginPref);
         passField.setText(passPref);
 
+
+
         Button logBtn =(Button)findViewById(R.id.login_button);
 
         logBtn.setOnClickListener(new View.OnClickListener() {
@@ -46,6 +59,31 @@ public class LoginActivity extends Activity {
 
                 String login = loginField.getText().toString();
                 String pass = passField.getText().toString();
+
+                RequestParams params = new RequestParams();
+                params.put("username", login);
+                params.put("password", pass);
+
+                progresDialog.show();
+                AsyncHttpClient client = new AsyncHttpClient();
+                client.get("http://dreja-programistyczny.rhcloud.com/login/get-user",params,new AsyncHttpResponseHandler(){
+
+                    @Override
+                    public void onSuccess(String response) {
+                       progresDialog.hide();
+                        Toast.makeText(getApplicationContext(),"Ok",Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Throwable error,
+                                          String content) {
+
+                        progresDialog.hide();
+                        Toast.makeText(getApplicationContext(),"Zle",Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+
 
                if(login.trim().contentEquals("rgozdz") && pass.trim().contentEquals("raffi5458")){
 
