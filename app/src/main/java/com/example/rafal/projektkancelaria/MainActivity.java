@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity
     public static FloatingActionButton fabDelete;
     public static FloatingActionButton fabEdit;
     public static int idCheck=1;
+    private boolean status;
 
 
     @Override
@@ -77,6 +78,7 @@ public class MainActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
+
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
@@ -110,12 +112,24 @@ public class MainActivity extends AppCompatActivity
 //    }
 
 
+
+
+//    @Override
+//    public void invalidateOptionsMenu() {
+//
+//        @Override
+//        public boolean onCreateOptionsMenu(Menu menu) {
+//            return super.onCreateOptionsMenu(menu);
+//        }
+//
+//        super.invalidateOptionsMenu();
+//    }
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-
 
         switch (id){
             case R.id.nav_logout:
