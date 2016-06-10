@@ -27,14 +27,21 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.concurrent.ExecutionException;
 
 
 /**
  * Created by rafal on 22.03.2016.
  */
-public class LoginActivity extends Activity {
+public class LoginActivity extends Activity implements AsyncResponse {
 
+    EditText loginField;
+    EditText passField;
+    CheckBox checkLogin;
+    String PREFS_NAME;
+    String PREF_USERNAME;
+    String PREF_PASSWORD;
+    String login;
+    String pass;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,19 +52,12 @@ public class LoginActivity extends Activity {
                 .permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
-        final EditText loginField = (EditText) findViewById(R.id.name_login);
-        final EditText passField = (EditText) findViewById(R.id.passText);
-        final CheckBox checkLogin = (CheckBox) findViewById(R.id.checLog);
-
-        final ProgressDialog progresDialog = new ProgressDialog(this);
-
-        progresDialog.setMessage("Trwa logowanie");
-        progresDialog.setCancelable(false);
-
-
-        final String PREFS_NAME = "PrefsFile";
-        final String PREF_USERNAME = "username";
-        final String PREF_PASSWORD = "password";
+        loginField = (EditText) findViewById(R.id.name_login);
+        passField = (EditText) findViewById(R.id.passText);
+        checkLogin = (CheckBox) findViewById(R.id.checLog);
+        PREFS_NAME = "PrefsFile";
+        PREF_USERNAME = "username";
+        PREF_PASSWORD = "password";
 
         SharedPreferences pref = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
         final String loginPref = pref.getString(PREF_USERNAME, null);
@@ -69,66 +69,31 @@ public class LoginActivity extends Activity {
         loginField.setText(loginPref);
         passField.setText(passPref);
 
-
         Button logBtn = (Button) findViewById(R.id.login_button);
 
         logBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
+                login = loginField.getText().toString();
+                pass = passField.getText().toString();
 
-                String login = loginField.getText().toString();
-                String pass = passField.getText().toString();
+                HttpAsyncTask task = new HttpAsyncTask(LoginActivity.this);
 
-                try {
-
-                    String idUser= new HttpAsyncTask().execute(login,pass).get();
-
-                    Toast.makeText(getApplicationContext(), "Id użytkownika "+idUser, Toast.LENGTH_SHORT).show();
-
-                    System.out.println(idUser);
-
-                    String condition ="brak uzytokownika";
+                task.delegate = LoginActivity.this;
+                task.execute(login, pass);
 
 
-                if (idUser.length()!=17) {
-
-
-                    if (checkLogin.isChecked()) {
-                        getSharedPreferences(PREFS_NAME, MODE_PRIVATE).edit()
-                                .putString(PREF_USERNAME, login)
-                                .putString(PREF_PASSWORD, pass)
-                                .commit();
-                    } else {
-
-                        getSharedPreferences(PREFS_NAME, MODE_PRIVATE).edit().clear().commit();
-                    }
-                    Toast.makeText(getApplicationContext(), "Zalogowano", Toast.LENGTH_SHORT).show();
-                    Intent mainIntent = new Intent(v.getContext(), MainActivity.class);
-                    LoginActivity.this.startActivity(mainIntent);
-                    finish();
-
-
-                } else
-                    Toast.makeText(getApplicationContext(), "Błędny login lub hasło", Toast.LENGTH_SHORT).show();
-
-
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                }
             }
         });
     }
 
 
-
-    private static String convertInputStreamToString(InputStream inputStream) throws IOException{
-        BufferedReader bufferedReader = new BufferedReader( new InputStreamReader(inputStream));
+    private static String convertInputStreamToString(InputStream inputStream) throws IOException {
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
         String line = "";
         String result = "";
-        while((line = bufferedReader.readLine()) != null)
+        while ((line = bufferedReader.readLine()) != null)
             result += line;
 
         inputStream.close();
@@ -136,20 +101,55 @@ public class LoginActivity extends Activity {
 
     }
 
-    private class HttpAsyncTask extends AsyncTask<String, Void, String> {
+    @Override
+    public void processFinish(String idUser) {
+
+        if (idUser.length() != 17) {
 
 
-        private final ProgressDialog dialog = new ProgressDialog(LoginActivity.this);
+            if (checkLogin.isChecked()) {
+                getSharedPreferences(PREFS_NAME, MODE_PRIVATE).edit()
+                        .putString(PREF_USERNAME, login)
+                        .putString(PREF_PASSWORD, pass)
+                        .commit();
+            } else {
 
+                getSharedPreferences(PREFS_NAME, MODE_PRIVATE).edit().clear().commit();
+            }
+            Toast.makeText(getApplicationContext(), "Zalogowano" +idUser, Toast.LENGTH_SHORT).show();
+            Intent mainIntent = new Intent(this, MainActivity.class);
+            LoginActivity.this.startActivity(mainIntent);
+            finish();
+
+        } else {
+            Toast.makeText(getApplicationContext(), "Błędny login lub hasło", Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    public class HttpAsyncTask extends AsyncTask<String, Void, String> {
+
+        public AsyncResponse delegate = null;
+        private ProgressDialog dialog;
+
+        public HttpAsyncTask(LoginActivity activity) {
+            dialog = new ProgressDialog(activity);
+        }
 
         @Override
         protected void onPreExecute() {
-
-            dialog.setMessage("Trwa logowanie");
-            dialog.setCancelable(false);
+            dialog.setMessage("Logowanie...");
             dialog.show();
-            super.onPreExecute();
         }
+
+        @Override
+        protected void onPostExecute(String s) {
+            if (dialog.isShowing())
+                dialog.hide();
+
+            delegate.processFinish(s);
+        }
+
 
         @Override
         protected String doInBackground(String... params) {
@@ -159,6 +159,7 @@ public class LoginActivity extends Activity {
             URL url = null;
             String idUser = null;
             try {
+
                 url = new URL(urlString);
                 HttpURLConnection con = (HttpURLConnection) url.openConnection();
                 con.setDoOutput(true);
@@ -194,6 +195,7 @@ public class LoginActivity extends Activity {
                 else
                     System.out.println("Did not work!");
 
+                System.out.println("janusz " + idUser);
 
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -204,12 +206,9 @@ public class LoginActivity extends Activity {
 
             return idUser;
         }
-        // onPostExecute displays the results of the AsyncTask.
-        @Override
-        protected void onPostExecute(String result) {
 
-            dialog.dismiss();
-        }
+
     }
+
 
 }
