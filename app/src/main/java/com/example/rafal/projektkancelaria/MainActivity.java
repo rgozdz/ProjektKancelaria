@@ -17,7 +17,7 @@ import android.widget.Toast;
 //import java.util.logging.Handler;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener{
 
     NavigationView navigationView;
     Toolbar toolbar;
@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity
     public static FloatingActionButton fabDelete;
     public static FloatingActionButton fabEdit;
     public static int idCheck=1;
+    public static boolean brakDok= false;
     private boolean status;
 
 
@@ -137,34 +138,46 @@ public class MainActivity extends AppCompatActivity
                 startActivity(loguotIntent);
                 finish();
                 break;
-            case R.id.nav_documents:
+            case R.id.nav_kadrowe:
                 idCheck=1;
-                getSupportActionBar().setTitle("Lista wniosków");
+                getSupportActionBar().setTitle("Wnioski kadrowe");
                 fragment_document fragment =new fragment_document();
                 android.support.v4.app.FragmentTransaction fragmentTransaction =
                         getSupportFragmentManager().beginTransaction();
                 fragmentTransaction.replace(R.id.fragment_container, fragment);
                 fragmentTransaction.commit();
                 break;
-            case R.id.nav_acceptation:
+            case R.id.nav_urlopowe:
                 idCheck=2;
-                getSupportActionBar().setTitle("Wnioski do akceptacji");
+                getSupportActionBar().setTitle("Wnioski urlopowe");
                 fragment_document fragmentAccept =new fragment_document();
                 fragmentTransaction =
                         getSupportFragmentManager().beginTransaction();
                 fragmentTransaction.replace(R.id.fragment_container, fragmentAccept);
                 fragmentTransaction.commit();
                 break;
-            case R.id.nav_waitting:
+            case R.id.nav_podwyzka:
 
                 idCheck=3;
-                getSupportActionBar().setTitle("Oczekujące na akceptacje");
+                getSupportActionBar().setTitle("Wnioski o podwyżkę");
                 fragment_document fragmentWait =new fragment_document();
                 fragmentTransaction =
                         getSupportFragmentManager().beginTransaction();
                 fragmentTransaction.replace(R.id.fragment_container, fragmentWait);
                 fragmentTransaction.commit();
                 break;
+            case R.id.nav_acceptation:
+
+                idCheck=4;
+                getSupportActionBar().setTitle("Do akceptacji");
+                fragment_document fragmentWait2 =new fragment_document();
+                fragmentTransaction =
+                        getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.fragment_container, fragmentWait2);
+                fragmentTransaction.commit();
+                break;
+
+
             case R.id.nav_photo:
                 EditUserDialog editDialog = new EditUserDialog();
                 editDialog.show(getSupportFragmentManager(),"photoEdit");
@@ -176,4 +189,6 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+
 }

@@ -34,7 +34,7 @@
         android:layout_alignStart="@+id/passText"
         android:layout_above="@+id/passText"
         android:layout_alignEnd="@+id/passText"
-        android:hint="@+id/login_hint"/>
+        android:hint="@string/login_hint"/>
 
     <EditText
         android:layout_width="wrap_content"
@@ -45,7 +45,7 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="171dp"
-        android:hint="@+id/pass_hint"/>
+        android:hint="@string/pass_hint"/>
 
     <Button
         android:layout_width="wrap_content"

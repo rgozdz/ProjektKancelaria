@@ -10,7 +10,6 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import static com.example.rafal.projektkancelaria.ListConstants.DATE_COLUMN;
 import static com.example.rafal.projektkancelaria.ListConstants.NAME_COLUMN;
 import static com.example.rafal.projektkancelaria.ListConstants.STATUS_COLUMN;
 import static com.example.rafal.projektkancelaria.ListConstants.TYPE_COLUMN;
@@ -58,7 +57,7 @@ public class DocumentListViewAdapter extends BaseAdapter {
 
         LayoutInflater inflater=activity.getLayoutInflater();
 
-        if(MainActivity.idCheck!=1){
+        if(MainActivity.brakDok){
 
             convertView = inflater.inflate(R.layout.no_elements_row, null);
             this.notifyDataSetChanged();
@@ -67,13 +66,11 @@ public class DocumentListViewAdapter extends BaseAdapter {
         }else if(convertView == null) {
 
             convertView = inflater.inflate(R.layout.list_row, null);
-            dateText = (TextView) convertView.findViewById(R.id.date);
             nameText = (TextView) convertView.findViewById(R.id.name);
             typeText = (TextView) convertView.findViewById(R.id.type);
             statusText = (TextView) convertView.findViewById(R.id.status);
         }
             HashMap<String, String> map=list.get(position);
-            dateText.setText(map.get(DATE_COLUMN));
             nameText.setText(map.get(NAME_COLUMN));
             typeText.setText(map.get(TYPE_COLUMN));
             statusText.setText(map.get(STATUS_COLUMN));
@@ -86,9 +83,6 @@ public class DocumentListViewAdapter extends BaseAdapter {
     @Override
     public boolean isEnabled(int position) {
 
-        if (MainActivity.idCheck!=1)
-            return false;
-        else
-            return true;
+      return !MainActivity.brakDok;
     }
 }

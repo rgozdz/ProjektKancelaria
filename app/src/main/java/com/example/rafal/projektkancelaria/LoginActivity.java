@@ -83,7 +83,6 @@ public class LoginActivity extends Activity implements AsyncResponse {
                 task.delegate = LoginActivity.this;
                 task.execute(login, pass);
 
-
             }
         });
     }
@@ -126,6 +125,7 @@ public class LoginActivity extends Activity implements AsyncResponse {
         }
 
     }
+
 
     public class HttpAsyncTask extends AsyncTask<String, Void, String> {
 

@@ -7,32 +7,27 @@
         >
 
         <TextView
-            android:id="@+id/date"
-            android:layout_height="47dp"
-            android:layout_width="0dp"
-            android:layout_weight="0.43"
-            android:layout_marginTop="8dp"/>
-
-        <TextView
             android:id="@+id/name"
             android:layout_height="47dp"
             android:layout_width="0dp"
-            android:layout_weight="0.69"
+            android:layout_weight="0.33"
             android:textStyle="bold"
+            android:layout_marginLeft="2sp"
             android:layout_marginTop="8dp"/>
 
         <TextView
             android:id="@+id/type"
             android:layout_height="47dp"
             android:layout_width="0dp"
-            android:layout_weight="0.32"
+            android:layout_weight="0.33"
             android:layout_marginTop="8dp"/>
 
         <TextView
             android:id="@+id/status"
             android:layout_height="47dp"
             android:layout_width="0dp"
-            android:layout_weight="0.56"
+            android:layout_weight="0.22"
+            android:layout_marginLeft="12sp"
             android:layout_marginTop="8dp"/>
 
 

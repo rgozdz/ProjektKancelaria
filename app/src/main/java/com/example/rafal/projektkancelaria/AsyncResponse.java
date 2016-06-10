@@ -6,4 +6,6 @@ package com.example.rafal.projektkancelaria;
 public interface AsyncResponse {
 
     void processFinish(String output);
+
+
 }

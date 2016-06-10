@@ -3,12 +3,14 @@
 
     <item android:title="Kancelaria">
         <menu>
-            <item android:id="@+id/nav_documents" android:icon="@drawable/document"
-                android:title="Wnioski" />
+            <item android:id="@+id/nav_urlopowe" android:icon="@drawable/document"
+                android:title="Wnioski urlopowe" />
+            <item android:id="@+id/nav_kadrowe" android:icon="@drawable/document"
+                android:title="Wnioski kadrowe" />
+            <item android:id="@+id/nav_podwyzka" android:icon="@drawable/document"
+                android:title="Wnioski o podwyżkę" />
             <item android:id="@+id/nav_acceptation" android:icon="@drawable/to_accept"
-                android:title="Do akceptacji" />
-            <item android:id="@+id/nav_waitting" android:icon="@drawable/wait_for_accept"
-                android:title="Przekazane do akceptacji" />
+                android:title="Wnioski do zaakceptowania" />
 
         </menu>
     </item>
