@@ -7,10 +7,15 @@
     <string name="app_detalis">Szczegóły wniosku</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="login_button">Zaloguj</string>
+    <string name="login_button">Zaloguj się</string>
     <string name="add_document">Dodaj</string>
     <string name="save_document">Zapisz</string>
     <string name="cancel_adding">Anuluj</string>
+    <string name="app_title">Obieg dokumentacji</string>
+    <string name="app_subtitle">System kadrowy</string>
+    <string name="rememberOption">Zapamiętaj mnie</string>
+    <string name="pass_hint">Hasło</string>
+    <string name="login_hint">Login</string>
 
 
 </resources>

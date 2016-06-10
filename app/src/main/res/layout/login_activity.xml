@@ -3,6 +3,29 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:text="@string/app_title"
+        android:id="@+id/title"
+        android:textSize="38sp"
+        android:textStyle="bold"
+        android:layout_above="@+id/subtitle"
+        android:layout_alignStart="@+id/subtitle" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/app_subtitle"
+        android:id="@+id/subtitle"
+        android:textSize="20sp"
+        android:layout_alignBottom="@+id/name_login"
+        android:layout_marginBottom="171dp"
+        android:layout_marginLeft="10dp"/>
+
     <EditText
         android:layout_width="177dp"
         android:layout_height="wrap_content"
@@ -11,7 +34,7 @@
         android:layout_alignStart="@+id/passText"
         android:layout_above="@+id/passText"
         android:layout_alignEnd="@+id/passText"
-        android:hint="Login"/>
+        android:hint="@+id/login_hint"/>
 
     <EditText
         android:layout_width="wrap_content"
@@ -22,7 +45,7 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="171dp"
-        android:hint="Hasło"/>
+        android:hint="@+id/pass_hint"/>
 
     <Button
         android:layout_width="wrap_content"
@@ -31,16 +54,16 @@
         android:id="@+id/login_button"
         android:layout_marginTop="78dp"
         android:layout_below="@+id/name_login"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:background="@color/colorGreen"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Zapamiętaj mnie"
+        android:text="@string/rememberOption"
         android:id="@+id/textRemember"
-        android:textSize="16dp"
+        android:textSize="16sp"
         android:layout_marginTop="7dp"
-
         android:layout_alignTop="@+id/checLog"
         android:layout_alignBottom="@+id/checLog"
         android:layout_alignEnd="@+id/login_button" />
