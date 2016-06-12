@@ -42,6 +42,7 @@ public class LoginActivity extends Activity implements AsyncResponse {
     String PREF_PASSWORD;
     String login;
     String pass;
+    static String globalIdUser = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,6 +116,7 @@ public class LoginActivity extends Activity implements AsyncResponse {
 
                 getSharedPreferences(PREFS_NAME, MODE_PRIVATE).edit().clear().commit();
             }
+            globalIdUser=idUser;
             Toast.makeText(getApplicationContext(), "Zalogowano" +idUser, Toast.LENGTH_SHORT).show();
             Intent mainIntent = new Intent(this, MainActivity.class);
             LoginActivity.this.startActivity(mainIntent);

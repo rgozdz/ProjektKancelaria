@@ -73,13 +73,13 @@ public class fragment_document extends ListFragment implements AsyncJsonResponse
         switch (MainActivity.idCheck) {
 
             case 1:
-                task.execute("5", "wniosek_kadrowy");
+                task.execute(LoginActivity.globalIdUser, "wniosek_kadrowy");
                 break;
             case 2:
-                task.execute("5", "wniosek_urlop");
+                task.execute(LoginActivity.globalIdUser, "wniosek_urlop");
                 break;
             case 3:
-                task.execute("5", "wniosek_podwyzka");
+                task.execute(LoginActivity.globalIdUser, "wniosek_podwyzka");
                 break;
         }
 
