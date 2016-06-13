@@ -63,7 +63,7 @@ public class DocumentListViewAdapter extends BaseAdapter {
             this.notifyDataSetChanged();
             return convertView;
 
-        }else if(convertView == null) {
+        }else  {
 
             convertView = inflater.inflate(R.layout.list_row, null);
             nameText = (TextView) convertView.findViewById(R.id.name);

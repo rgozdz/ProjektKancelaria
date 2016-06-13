@@ -127,6 +127,15 @@ public class fragment_document extends ListFragment implements AsyncJsonResponse
                 list.add(temp);
             }
 
+            if(list.size()==0){
+
+                MainActivity.brakDok=true;
+                HashMap<String, String> temp = new HashMap<String, String>();
+                list.add(temp);
+
+            }
+
+
 
             adapter = new DocumentListViewAdapter(getActivity(), list);
             list1.setAdapter(adapter);

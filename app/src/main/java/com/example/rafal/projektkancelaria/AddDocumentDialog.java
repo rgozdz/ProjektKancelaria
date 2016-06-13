@@ -39,6 +39,8 @@ public class AddDocumentDialog extends DialogFragment implements AsyncResponse {
     private EditText nameField;
     private Spinner typeField;
     private EditText describtionField;
+    static boolean isEditable = false;
+
 
 
     @Override
@@ -78,18 +80,17 @@ public class AddDocumentDialog extends DialogFragment implements AsyncResponse {
 
                         String name = nameField.getText().toString();
                         String type = typeField.getSelectedItem().toString();
-                        String desctibtion =describtionField.getText().toString();
+                        String desctibtion = describtionField.getText().toString();
 
-                        if(!name.isEmpty())
-                        {
+
+                        if (!name.isEmpty()) {
 
                             task.execute(LoginActivity.globalIdUser,type,name,desctibtion);
-
-
                             Toast.makeText(getActivity(), "Dodano dokument " + name, Toast.LENGTH_SHORT).show();
+                            isEditable=true;
 
-                            //dialog.dismiss();
-                        }else{
+                        } else {
+
                             nameField.setHint("Nie podano tytułu");
                         }
                     }
@@ -196,6 +197,19 @@ public class AddDocumentDialog extends DialogFragment implements AsyncResponse {
 
     }
 
+
+    public class RafalException extends Exception{
+
+        RafalException(String message){
+
+            super(message);
+
+
+        }
+
+
+
+    }
 
 
 
