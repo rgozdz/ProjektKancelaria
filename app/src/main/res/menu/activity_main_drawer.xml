@@ -16,8 +16,8 @@
     </item>
 
     <group android:checkableBehavior="single">
-        <item android:id="@+id/nav_photo" android:icon="@drawable/ic_face_black"
-            android:title="Edycja danych użytkownika" />
+        <!--<item android:id="@+id/nav_photo" android:icon="@drawable/ic_face_black"-->
+            <!--android:title="Edycja danych użytkownika" />-->
         <item android:id="@+id/nav_logout" android:icon="@android:drawable/ic_lock_power_off"
             android:title="Wyloguj" />
 

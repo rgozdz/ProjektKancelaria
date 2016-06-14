@@ -81,6 +81,9 @@ public class fragment_document extends ListFragment implements AsyncJsonResponse
             case 3:
                 task.execute(LoginActivity.globalIdUser, "wniosek_podwyzka");
                 break;
+            case 4:
+                task.execute(LoginActivity.globalIdUser, "wniosek_podwyzka");
+                break;
         }
 
     }

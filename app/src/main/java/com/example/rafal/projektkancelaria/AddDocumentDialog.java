@@ -93,6 +93,7 @@ public class AddDocumentDialog extends DialogFragment implements AsyncResponse {
 
                             nameField.setHint("Nie podano tytułu");
                         }
+
                     }
                 }).setNegativeButton(R.string.cancel_adding, new DialogInterface.OnClickListener() {
             @Override
@@ -197,19 +198,6 @@ public class AddDocumentDialog extends DialogFragment implements AsyncResponse {
 
     }
 
-
-    public class RafalException extends Exception{
-
-        RafalException(String message){
-
-            super(message);
-
-
-        }
-
-
-
-    }
 
 
 

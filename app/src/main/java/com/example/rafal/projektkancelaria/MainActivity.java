@@ -12,12 +12,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 //import java.util.logging.Handler;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener{
+        implements NavigationView.OnNavigationItemSelectedListener {
 
     NavigationView navigationView;
     Toolbar toolbar;
@@ -25,8 +26,8 @@ public class MainActivity extends AppCompatActivity
     public static FloatingActionButton fab;
     public static FloatingActionButton fabDelete;
     public static FloatingActionButton fabEdit;
-    public static int idCheck=1;
-    public static boolean brakDok= false;
+    public static int idCheck = 1;
+    public static boolean brakDok = false;
     private boolean status;
 
 
@@ -34,8 +35,8 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        this.overridePendingTransition(R.anim.animation_enter,R.anim.animation_leave);
-        fragment_document fragment =new fragment_document();
+        this.overridePendingTransition(R.anim.animation_enter, R.anim.animation_leave);
+        fragment_document fragment = new fragment_document();
         android.support.v4.app.FragmentTransaction fragmentTransaction =
                 getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.fragment_container, fragment);
@@ -44,9 +45,10 @@ public class MainActivity extends AppCompatActivity
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+
         fab = (FloatingActionButton) findViewById(R.id.fab);
-        fabDelete =(FloatingActionButton) findViewById(R.id.fabDelete);
-        fabEdit =(FloatingActionButton) findViewById(R.id.fabEdit);
+        fabDelete = (FloatingActionButton) findViewById(R.id.fabDelete);
+        fabEdit = (FloatingActionButton) findViewById(R.id.fabEdit);
         fabDelete.hide();
         fabEdit.hide();
 
@@ -73,10 +75,21 @@ public class MainActivity extends AppCompatActivity
         });
 
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
+
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+
+
+                navigationView.getMenu().findItem(R.id.nav_acceptation).setVisible(false);
+                TextView personName = (TextView) findViewById(R.id.personName);
+                personName.setText("Janusz Janusz");
+            }
+        };
+        drawer.addDrawerListener(toggle);
         toggle.syncState();
 
 
@@ -90,18 +103,18 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else if(doubleBackPress){
+        } else if (doubleBackPress) {
             super.onBackPressed();
-        }else{
+        } else {
 
-            doubleBackPress=true;
-            Toast.makeText(this,"Naciśnij drugi raz aby wyjść",Toast.LENGTH_SHORT).show();
+            doubleBackPress = true;
+            Toast.makeText(this, "Naciśnij drugi raz aby wyjść", Toast.LENGTH_SHORT).show();
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    doubleBackPress=false;
+                    doubleBackPress = false;
                 }
-            },2000);
+            }, 2000);
         }
     }
 
@@ -111,8 +124,6 @@ public class MainActivity extends AppCompatActivity
 //        getMenuInflater().inflate(R.menu.main, menu);
 //        return true;
 //    }
-
-
 
 
 //    @Override
@@ -132,56 +143,56 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        switch (id){
+        switch (id) {
             case R.id.nav_logout:
                 Intent loguotIntent = new Intent(getApplicationContext(), LoginActivity.class);
                 startActivity(loguotIntent);
                 finish();
                 break;
             case R.id.nav_kadrowe:
-                idCheck=1;
+                idCheck = 1;
                 getSupportActionBar().setTitle("Wnioski kadrowe");
-                fragment_document fragment =new fragment_document();
+                fragment_document fragment = new fragment_document();
                 android.support.v4.app.FragmentTransaction fragmentTransaction =
                         getSupportFragmentManager().beginTransaction();
                 fragmentTransaction.replace(R.id.fragment_container, fragment);
                 fragmentTransaction.commit();
                 break;
             case R.id.nav_urlopowe:
-                idCheck=2;
+                idCheck = 2;
                 getSupportActionBar().setTitle("Wnioski urlopowe");
-                fragment_document fragmentAccept =new fragment_document();
+                fragment_document fragmentUrlop = new fragment_document();
                 fragmentTransaction =
                         getSupportFragmentManager().beginTransaction();
-                fragmentTransaction.replace(R.id.fragment_container, fragmentAccept);
+                fragmentTransaction.replace(R.id.fragment_container, fragmentUrlop);
                 fragmentTransaction.commit();
                 break;
             case R.id.nav_podwyzka:
 
-                idCheck=3;
+                idCheck = 3;
                 getSupportActionBar().setTitle("Wnioski o podwyżkę");
-                fragment_document fragmentWait =new fragment_document();
+                fragment_document fragmentRaise = new fragment_document();
+                fragmentTransaction =
+                        getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.fragment_container, fragmentRaise);
+                fragmentTransaction.commit();
+                break;
+            case R.id.nav_acceptation:
+
+                idCheck = 4;
+                getSupportActionBar().setTitle("Do akceptacji");
+                fragment_document fragmentWait = new fragment_document();
                 fragmentTransaction =
                         getSupportFragmentManager().beginTransaction();
                 fragmentTransaction.replace(R.id.fragment_container, fragmentWait);
                 fragmentTransaction.commit();
                 break;
-            case R.id.nav_acceptation:
-
-                idCheck=4;
-                getSupportActionBar().setTitle("Do akceptacji");
-                fragment_document fragmentWait2 =new fragment_document();
-                fragmentTransaction =
-                        getSupportFragmentManager().beginTransaction();
-                fragmentTransaction.replace(R.id.fragment_container, fragmentWait2);
-                fragmentTransaction.commit();
-                break;
 
 
-            case R.id.nav_photo:
-                EditUserDialog editDialog = new EditUserDialog();
-                editDialog.show(getSupportFragmentManager(),"photoEdit");
-                break;
+//            case R.id.nav_photo:
+//                EditUserDialog editDialog = new EditUserDialog();
+//                editDialog.show(getSupportFragmentManager(),"photoEdit");
+//                break;
         }
 
 
@@ -189,10 +200,6 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
-
-
-
 
 
 }

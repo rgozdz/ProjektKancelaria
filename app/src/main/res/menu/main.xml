@@ -2,31 +2,31 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools" tools:context=".DocumentDetails">
 
-    <item android:id="@+id/accept"
-          android:title="akceptuj"
-          android:orderInCategory="2"
-          app:showAsAction="ifRoom"
-          android:icon="@drawable/ic_check_white"
-          >
+    <!--<item android:id="@+id/accept"-->
+          <!--android:title="akceptuj"-->
+          <!--android:orderInCategory="2"-->
+          <!--app:showAsAction="ifRoom"-->
+          <!--android:icon="@drawable/ic_check_white"-->
+          <!-->-->
 
-    </item>
+    <!--</item>-->
 
-    <item android:id="@+id/discard"
-        android:title="odrzuć"
-        android:orderInCategory="3"
-        app:showAsAction="ifRoom"
-        android:icon="@drawable/ic_close_white"
-        >
+    <!--<item android:id="@+id/discard"-->
+        <!--android:title="odrzuć"-->
+        <!--android:orderInCategory="3"-->
+        <!--app:showAsAction="ifRoom"-->
+        <!--android:icon="@drawable/ic_close_white"-->
+        <!-->-->
 
-    </item>
+    <!--</item>-->
 
-    <item android:id="@+id/sendToAccept"
-        android:title="Przekaż do akceptacji"
-        android:orderInCategory="1"
-        app:showAsAction="ifRoom"
-        android:icon="@drawable/ic_to_accept_white"
-        >
+    <!--<item android:id="@+id/sendToAccept"-->
+        <!--android:title="Przekaż do akceptacji"-->
+        <!--android:orderInCategory="1"-->
+        <!--app:showAsAction="ifRoom"-->
+        <!--android:icon="@drawable/ic_to_accept_white"-->
+        <!-->-->
 
-    </item>
+    <!--</item>-->
 
 </menu>

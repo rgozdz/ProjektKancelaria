@@ -53,20 +53,20 @@ public class DocumentDetails extends AppCompatActivity {
             case android.R.id.home :
                 onBackPressed();
                 break;
-            case R.id.accept :
-                ConfirmDialog confDialog =new ConfirmDialog();
-                confDialog.show(getSupportFragmentManager(),"akceptacja");
-                break;
-            case R.id.discard :
-                RejectDialog rejectDialog = new RejectDialog();
-                rejectDialog.show(getSupportFragmentManager(),"odrzucanie");
-                break;
-            case R.id.sendToAccept:
-                ToAcceptDialog acceptDialog = new ToAcceptDialog();
-                acceptDialog.show(getSupportFragmentManager(),"dekretowanie");
-                break;
-            default:
-                break;
+//            case R.id.accept :
+//                ConfirmDialog confDialog =new ConfirmDialog();
+//                confDialog.show(getSupportFragmentManager(),"akceptacja");
+//                break;
+//            case R.id.discard :
+//                RejectDialog rejectDialog = new RejectDialog();
+//                rejectDialog.show(getSupportFragmentManager(),"odrzucanie");
+//                break;
+//            case R.id.sendToAccept:
+//                ToAcceptDialog acceptDialog = new ToAcceptDialog();
+//                acceptDialog.show(getSupportFragmentManager(),"dekretowanie");
+//                break;
+//            default:
+//                break;
         }
         return true;
     }
