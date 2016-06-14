@@ -84,9 +84,11 @@ public class MainActivity extends AppCompatActivity
                 super.onDrawerOpened(drawerView);
 
 
-                navigationView.getMenu().findItem(R.id.nav_acceptation).setVisible(false);
+//                navigationView.getMenu().findItem(R.id.nav_acceptation).setVisible(false);
                 TextView personName = (TextView) findViewById(R.id.personName);
-                personName.setText("Janusz Janusz");
+                TextView jobName = (TextView)findViewById(R.id.jobName);
+                personName.setText(LoginActivity.globalName+ " "+LoginActivity.globalSurrname);
+                jobName.setText(LoginActivity.globalJob);
             }
         };
         drawer.addDrawerListener(toggle);
@@ -177,16 +179,16 @@ public class MainActivity extends AppCompatActivity
                 fragmentTransaction.replace(R.id.fragment_container, fragmentRaise);
                 fragmentTransaction.commit();
                 break;
-            case R.id.nav_acceptation:
-
-                idCheck = 4;
-                getSupportActionBar().setTitle("Do akceptacji");
-                fragment_document fragmentWait = new fragment_document();
-                fragmentTransaction =
-                        getSupportFragmentManager().beginTransaction();
-                fragmentTransaction.replace(R.id.fragment_container, fragmentWait);
-                fragmentTransaction.commit();
-                break;
+//            case R.id.nav_acceptation:
+//
+//                idCheck = 4;
+//                getSupportActionBar().setTitle("Do akceptacji");
+//                fragment_document fragmentWait = new fragment_document();
+//                fragmentTransaction =
+//                        getSupportFragmentManager().beginTransaction();
+//                fragmentTransaction.replace(R.id.fragment_container, fragmentWait);
+//                fragmentTransaction.commit();
+//                break;
 
 
 //            case R.id.nav_photo:

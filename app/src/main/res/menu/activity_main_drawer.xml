@@ -9,8 +9,8 @@
                 android:title="Wnioski kadrowe" />
             <item android:id="@+id/nav_podwyzka" android:icon="@drawable/document"
                 android:title="Wnioski o podwyżkę" />
-            <item android:id="@+id/nav_acceptation" android:icon="@drawable/to_accept"
-                android:title="Wnioski do zaakceptowania" />
+            <!--<item android:id="@+id/nav_acceptation" android:icon="@drawable/to_accept"-->
+                <!--android:title="Wnioski do zaakceptowania" />-->
 
         </menu>
     </item>

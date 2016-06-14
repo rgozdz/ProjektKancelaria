@@ -20,6 +20,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.JSONTokener;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -32,7 +33,7 @@ import java.net.URL;
 /**
  * Created by rafal on 22.03.2016.
  */
-public class LoginActivity extends Activity implements AsyncResponse {
+public class LoginActivity extends Activity implements AsyncSingleJsonResponse {
 
     EditText loginField;
     EditText passField;
@@ -43,6 +44,9 @@ public class LoginActivity extends Activity implements AsyncResponse {
     String login;
     String pass;
     static String globalIdUser = null;
+    static String globalName = null;
+    static String globalSurrname = null;
+    static String globalJob = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,36 +106,49 @@ public class LoginActivity extends Activity implements AsyncResponse {
     }
 
     @Override
-    public void processFinish(String idUser) {
+    public void processJSONFinish(JSONTokener output) {
 
-        if (idUser.length() != 17) {
+        try {
+            JSONObject jsonObj = (JSONObject) output.nextValue();
 
 
-            if (checkLogin.isChecked()) {
-                getSharedPreferences(PREFS_NAME, MODE_PRIVATE).edit()
-                        .putString(PREF_USERNAME, login)
-                        .putString(PREF_PASSWORD, pass)
-                        .commit();
+            globalIdUser = jsonObj.optString("id");
+            globalName = jsonObj.optString("imie");
+            globalSurrname = jsonObj.optString("nazwisko");
+            globalJob = jsonObj.optString("stanowisko");
+
+
+            if (globalIdUser.length() != 17) {
+
+
+                if (checkLogin.isChecked()) {
+                    getSharedPreferences(PREFS_NAME, MODE_PRIVATE).edit()
+                            .putString(PREF_USERNAME, login)
+                            .putString(PREF_PASSWORD, pass)
+                            .commit();
+                } else {
+
+                    getSharedPreferences(PREFS_NAME, MODE_PRIVATE).edit().clear().commit();
+                }
+                Toast.makeText(getApplicationContext(), "Zalogowano", Toast.LENGTH_SHORT).show();
+                Intent mainIntent = new Intent(this, MainActivity.class);
+                LoginActivity.this.startActivity(mainIntent);
+                finish();
+
             } else {
-
-                getSharedPreferences(PREFS_NAME, MODE_PRIVATE).edit().clear().commit();
+                Toast.makeText(getApplicationContext(), "Błędny login lub hasło", Toast.LENGTH_SHORT).show();
             }
-            globalIdUser=idUser;
-            Toast.makeText(getApplicationContext(), "Zalogowano" +idUser, Toast.LENGTH_SHORT).show();
-            Intent mainIntent = new Intent(this, MainActivity.class);
-            LoginActivity.this.startActivity(mainIntent);
-            finish();
 
-        } else {
-            Toast.makeText(getApplicationContext(), "Błędny login lub hasło", Toast.LENGTH_SHORT).show();
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
 
     }
 
 
-    public class HttpAsyncTask extends AsyncTask<String, Void, String> {
+    public class HttpAsyncTask extends AsyncTask<String, Void, JSONTokener> {
 
-        public AsyncResponse delegate = null;
+        public AsyncSingleJsonResponse delegate = null;
         private ProgressDialog dialog;
 
         public HttpAsyncTask(LoginActivity activity) {
@@ -145,21 +162,25 @@ public class LoginActivity extends Activity implements AsyncResponse {
         }
 
         @Override
-        protected void onPostExecute(String s) {
+        protected void onPostExecute(JSONTokener s) {
             if (dialog.isShowing())
                 dialog.hide();
 
-            delegate.processFinish(s);
+            try {
+                delegate.processJSONFinish(s);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
 
 
         @Override
-        protected String doInBackground(String... params) {
+        protected JSONTokener doInBackground(String... params) {
 
             String urlString = "http://dreja-programistyczny.rhcloud.com/login/get-user";
 
             URL url = null;
-            String idUser = null;
+            JSONTokener result = null;
             try {
 
                 url = new URL(urlString);
@@ -190,14 +211,13 @@ public class LoginActivity extends Activity implements AsyncResponse {
                 httpPost.setHeader("Content-type", "application/json");
                 HttpResponse httpResponse = httpclient.execute(httpPost);
 
-                InputStream inputStream = httpResponse.getEntity().getContent();
+                BufferedReader reader = new BufferedReader(new InputStreamReader(httpResponse.getEntity().getContent(), "UTF-8"));
+                String recivejson = reader.readLine();
+                result = new JSONTokener(recivejson);
 
-                if (inputStream != null)
-                    idUser = convertInputStreamToString(inputStream).toString();
-                else
-                    System.out.println("Did not work!");
 
-                System.out.println("janusz " + idUser);
+                System.out.println("janusz " + result);
+
 
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -206,9 +226,8 @@ public class LoginActivity extends Activity implements AsyncResponse {
                 e.printStackTrace();
             }
 
-            return idUser;
+            return result;
         }
-
 
     }
 
